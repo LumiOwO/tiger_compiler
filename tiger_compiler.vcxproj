@@ -49,6 +49,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)\llvm\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -60,15 +61,197 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <SDLCheck>true</SDLCheck>
+      <SDLCheck>false</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(ProjectDir)\llvm\include;$(ProjectDir)\llvm\compiled\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>define.h</PrecompiledHeaderFile>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalLibraryDirectories>$(ProjectDir)\llvm\compiled\lib\Release;$(ProjectDir)\llvm\lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\KaleidoscopeJIT.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\toy.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="llvm\compiled\lib\Release\DynamicLibraryLib.lib" />
+    <Library Include="llvm\compiled\lib\Release\gtest.lib" />
+    <Library Include="llvm\compiled\lib\Release\gtest_main.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVM-C.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMAArch64AsmParser.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMAArch64CodeGen.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMAArch64Desc.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMAArch64Disassembler.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMAArch64Info.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMAArch64Utils.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMAggressiveInstCombine.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMAMDGPUAsmParser.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMAMDGPUCodeGen.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMAMDGPUDesc.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMAMDGPUDisassembler.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMAMDGPUInfo.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMAMDGPUUtils.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMAnalysis.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMARMAsmParser.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMARMCodeGen.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMARMDesc.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMARMDisassembler.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMARMInfo.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMARMUtils.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMAsmParser.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMAsmPrinter.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMAVRAsmParser.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMAVRCodeGen.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMAVRDesc.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMAVRDisassembler.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMAVRInfo.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMBinaryFormat.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMBitReader.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMBitstreamReader.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMBitWriter.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMBPFAsmParser.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMBPFCodeGen.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMBPFDesc.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMBPFDisassembler.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMBPFInfo.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMCFGuard.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMCodeGen.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMCore.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMCoroutines.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMCoverage.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMDebugInfoCodeView.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMDebugInfoDWARF.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMDebugInfoGSYM.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMDebugInfoMSF.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMDebugInfoPDB.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMDemangle.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMDlltoolDriver.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMDWARFLinker.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMExecutionEngine.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMExtensions.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMFrontendOpenMP.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMFuzzMutate.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMGlobalISel.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMHexagonAsmParser.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMHexagonCodeGen.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMHexagonDesc.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMHexagonDisassembler.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMHexagonInfo.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMInstCombine.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMInstrumentation.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMInterpreter.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMipo.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMIRReader.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMJITLink.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMLanaiAsmParser.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMLanaiCodeGen.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMLanaiDesc.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMLanaiDisassembler.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMLanaiInfo.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMLibDriver.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMLineEditor.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMLinker.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMLTO.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMMC.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMMCA.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMMCDisassembler.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMMCJIT.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMMCParser.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMMipsAsmParser.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMMipsCodeGen.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMMipsDesc.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMMipsDisassembler.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMMipsInfo.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMMIRParser.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMMSP430AsmParser.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMMSP430CodeGen.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMMSP430Desc.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMMSP430Disassembler.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMMSP430Info.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMNVPTXCodeGen.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMNVPTXDesc.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMNVPTXInfo.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMObjCARCOpts.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMObject.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMObjectYAML.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMOption.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMOrcError.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMOrcJIT.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMPasses.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMPowerPCAsmParser.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMPowerPCCodeGen.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMPowerPCDesc.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMPowerPCDisassembler.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMPowerPCInfo.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMProfileData.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMRemarks.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMRISCVAsmParser.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMRISCVCodeGen.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMRISCVDesc.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMRISCVDisassembler.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMRISCVInfo.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMRISCVUtils.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMRuntimeDyld.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMScalarOpts.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMSelectionDAG.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMSparcAsmParser.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMSparcCodeGen.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMSparcDesc.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMSparcDisassembler.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMSparcInfo.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMSupport.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMSymbolize.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMSystemZAsmParser.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMSystemZCodeGen.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMSystemZDesc.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMSystemZDisassembler.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMSystemZInfo.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMTableGen.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMTableGenGlobalISel.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMTarget.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMTestingSupport.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMTextAPI.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMTransformUtils.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMVectorize.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMWebAssemblyAsmParser.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMWebAssemblyCodeGen.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMWebAssemblyDesc.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMWebAssemblyDisassembler.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMWebAssemblyInfo.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMWindowsManifest.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMX86AsmParser.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMX86CodeGen.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMX86Desc.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMX86Disassembler.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMX86Info.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMXCoreCodeGen.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMXCoreDesc.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMXCoreDisassembler.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMXCoreInfo.lib" />
+    <Library Include="llvm\compiled\lib\Release\LLVMXRay.lib" />
+    <Library Include="llvm\compiled\lib\Release\LTO.lib" />
+    <Library Include="llvm\compiled\lib\Release\Remarks.lib" />
+    <Library Include="llvm\lib\Release\benchmark.lib" />
+    <Library Include="llvm\lib\Release\benchmark_main.lib" />
+    <Library Include="llvm\lib\Release\LLVMCFIVerify.lib" />
+    <Library Include="llvm\lib\Release\LLVMExegesis.lib" />
+    <Library Include="llvm\lib\Release\LLVMExegesisAArch64.lib" />
+    <Library Include="llvm\lib\Release\LLVMExegesisMips.lib" />
+    <Library Include="llvm\lib\Release\LLVMExegesisPowerPC.lib" />
+    <Library Include="llvm\lib\Release\LLVMExegesisX86.lib" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="llvm\compiled\lib\Release\LLVM-C.exp" />
+    <None Include="llvm\compiled\lib\Release\LTO.exp" />
+    <None Include="llvm\compiled\lib\Release\Remarks.exp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
