@@ -18,9 +18,27 @@
     <ClInclude Include="src\KaleidoscopeJIT.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="src\parser\AST.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\parser\parser.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\parser\parser.tab.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\toy.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\parser\AST.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\parser\parser.tab.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\parser\lex.yy.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -195,5 +213,7 @@
     <None Include="llvm\compiled\lib\Release\LLVM-C.exp" />
     <None Include="llvm\compiled\lib\Release\LTO.exp" />
     <None Include="llvm\compiled\lib\Release\Remarks.exp" />
+    <None Include="src\parser\parser.ypp" />
+    <None Include="src\parser\lex.l" />
   </ItemGroup>
 </Project>

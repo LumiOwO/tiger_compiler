@@ -1,0 +1,60 @@
+%{
+#include <iostream>  
+using namespace std;
+
+#include "parser.h"
+
+extern int yylex();  
+extern void yyerror(const char *msg);
+
+int global_type;
+
+%}
+%token FLOAT INT
+
+%%
+S: exp {
+	if(global_type == T_INT) {
+		cout << $1.i << endl;
+	} else {
+		cout << $1.f << endl;
+	}
+};
+
+exp:  exp  '+' exp1 { compute_op($$, $1, +, $3); }
+	| exp  '-' exp1 { compute_op($$, $1, -, $3); }
+	| exp1;
+
+exp1: exp1 '*' exp2 { compute_op($$, $1, *, $3); }
+	| exp1 '/' exp2 { compute_op($$, $1, /, $3); }
+	| exp2;
+
+exp2: exp3 '^' exp2 { 
+		if($3.type == T_INT && $3.i < 0) global_type = T_FLOAT;
+		compute_func($$, pow, $1, $3); }
+	| exp3;
+
+exp3: '-' exp3 		{ Type zero; compute_op($$, zero, -, $2); }
+	| '+' exp3 		{ Type zero; compute_op($$, zero, +, $2); }
+	| exp4;
+
+exp4: FLOAT 		{ $$ = $1; global_type = T_FLOAT; }
+	| INT 			{ $$ = $1; }
+	| '(' exp ')'	{ $$ = $2; };
+%%
+
+int main()
+{
+	cout << "Calculator started. Press Ctrl+C to exit.\n";
+    while(true) {
+		global_type = T_INT;
+		cout << ">> ";
+		yyparse();
+	} 
+    return 0;
+}
+
+void yyerror(const char *msg)
+{
+    printf("Error encountered: %s \n", msg);
+}

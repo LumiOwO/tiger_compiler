@@ -1210,7 +1210,7 @@ extern "C" double printd(double X) {
 //===----------------------------------------------------------------------===//
 // Main driver code.
 //===----------------------------------------------------------------------===//
-
+#if 0
 int main() {
   InitializeNativeTarget();
   InitializeNativeTargetAsmPrinter();
@@ -1238,3 +1238,4 @@ int main() {
 
   return 0;
 }
+#endif

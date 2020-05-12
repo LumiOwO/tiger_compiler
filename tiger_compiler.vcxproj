@@ -63,7 +63,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(ProjectDir)\llvm\include;$(ProjectDir)\llvm\compiled\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\llvm\include;$(ProjectDir)\llvm\compiled\include;$(ProjectDir)\src;$(ProjectDir)\GnuWin32\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>define.h</PrecompiledHeaderFile>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -74,11 +74,24 @@
       <AdditionalLibraryDirectories>$(ProjectDir)\llvm\compiled\lib\Release;$(ProjectDir)\llvm\lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+    <PreBuildEvent>
+      <Command>@set GNUWIN32_DIR=$(ProjectDir)GnuWin32\bin
+@set PARSER_DIR=$(ProjectDir)src\parser
+cd %PARSER_DIR%
+%GNUWIN32_DIR%\flex -o%PARSER_DIR%\lex.yy.cpp %PARSER_DIR%\lex.l
+%GNUWIN32_DIR%\bison -d %PARSER_DIR%\parser.ypp</Command>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\KaleidoscopeJIT.h" />
+    <ClInclude Include="src\parser\AST.h" />
+    <ClInclude Include="src\parser\parser.h" />
+    <ClInclude Include="src\parser\parser.tab.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\parser\AST.cpp" />
+    <ClCompile Include="src\parser\lex.yy.cpp" />
+    <ClCompile Include="src\parser\parser.tab.cpp" />
     <ClCompile Include="src\toy.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -252,6 +265,8 @@
     <None Include="llvm\compiled\lib\Release\LLVM-C.exp" />
     <None Include="llvm\compiled\lib\Release\LTO.exp" />
     <None Include="llvm\compiled\lib\Release\Remarks.exp" />
+    <None Include="src\parser\lex.l" />
+    <None Include="src\parser\parser.ypp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
