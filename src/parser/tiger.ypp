@@ -1,0 +1,280 @@
+%{
+#include "parser.h"
+#include <iostream>
+
+extern FILE* yyin;
+extern int yylex();  
+extern void yyerror(const char *msg);
+
+// Set for typenames
+TypeSet typeset;
+
+%}
+
+// Keywords
+%token K_NIL K_IF K_ELSE K_WHILE K_DO K_FOR K_TO K_BREAK K_THEN
+%token K_IN K_END K_OF K_TYPE K_ARRAY K_VAR K_FUNC K_LET
+// Operators
+%token O_ASSIGN O_COMPARE
+// Constant
+%token C_STRING C_INTEGER
+// ID
+%token T_ID T_TYPE
+
+// Priority
+%left ';' ',' '.'
+%nonassoc K_DO K_OF
+%nonassoc K_THEN
+%nonassoc K_ELSE
+%right O_ASSIGN
+%left '|'
+%left '&'
+%nonassoc '=' '>' '<' O_COMPARE
+%left '+' '-'
+%left '*' '/'
+
+%%
+// Start symbol
+S: 
+    expr {
+        debug_print("S");
+    };
+
+// ID
+id: 
+    T_ID {
+        debug_print("ID");
+    };
+typename: 
+    T_TYPE {
+        debug_print("typename");
+    };
+
+// Binary operation
+binary_operation:
+    expr O_COMPARE expr {
+        debug_print("expr O_COMPARE expr");
+    } |
+    expr '+' expr {
+        debug_print("expr + expr");
+    } |
+    expr '-' expr {
+        debug_print("expr - expr");
+    } |
+    expr '*' expr {
+        debug_print("expr * expr");
+    } |
+    expr '/' expr {
+        debug_print("expr / expr");
+    } |
+    expr '=' expr {
+        debug_print("expr = expr");
+    } |
+    expr '&' expr {
+        debug_print("expr & expr");
+    } |
+    expr '|' expr {
+        debug_print("expr | expr");
+    } |
+    expr '>' expr {
+        debug_print("expr > expr");
+    } |
+    expr '<' expr {
+        debug_print("expr < expr");
+    } ;
+
+//===----------------------------------------------------------------------===//
+// Expressions
+//===----------------------------------------------------------------------===//
+expr:
+    C_STRING {
+        debug_print("string-constant");
+    } |
+    C_INTEGER {
+        debug_print("integer-constant");
+    } |
+    K_NIL {
+        debug_print("nil");
+    } |
+    lvalue {
+        debug_print("lvalue");
+    } |
+    '-' expr {
+        debug_print("- expr");
+    } |
+    binary_operation {
+        debug_print("binary_operation");
+    } |
+    lvalue O_ASSIGN expr {
+        debug_print("lvalue := expr");
+    } |
+    id '(' ')' {
+        debug_print("id ( )");
+    } |
+    id '(' expr_list ')' {
+        debug_print("id ( expr-list )");
+    } |
+    '(' ')' {
+        debug_print("( )");
+    } |
+    '(' expr_seq ')' {
+        debug_print("( expr-seq )");
+    } |
+    typename '{' '}' {
+        debug_print("type-id { }");
+    } |
+    typename '{' field_list '}' {
+        debug_print("type-id { field-list }");
+    } |
+    typename '[' expr ']' K_OF expr {
+        debug_print("type-id [ expr ] of expr");
+    } |
+    K_IF expr K_THEN expr {
+        debug_print("if expr then expr");
+    } |
+    K_IF expr K_THEN expr K_ELSE expr {
+        debug_print("if expr then expr else expr");
+    } |
+    K_WHILE expr K_DO expr {
+        debug_print("while expr do expr");
+    } |
+    K_FOR id O_ASSIGN expr K_TO expr K_DO expr {
+        debug_print("for id := expr to expr do expr");
+    } |
+    K_BREAK {
+        debug_print("break");
+    } |
+    K_LET declaration_list K_IN K_END {
+        debug_print("let declaration-list in end");
+    } |
+    K_LET declaration_list K_IN expr_seq K_END {
+        debug_print("let declaration-list in expr-seq end");
+    } ;
+
+expr_seq:
+    expr {
+        debug_print("expr");
+    } |
+    expr_seq ';' expr {
+        debug_print("expr-seq ; expr");
+    } ;
+
+expr_list:
+    expr {
+        debug_print("expr");
+    } |
+    expr_list ',' expr {
+        debug_print("expr-list , expr");
+    } ;
+
+field_list:
+    id '=' expr {
+        debug_print("id = expr");
+    } |
+    field_list ',' id '=' expr {
+        debug_print("field-list , id = expr");
+    } ;
+
+lvalue:
+    id {
+        debug_print("id");
+    } |
+    lvalue '.' id {
+        debug_print("lvalue . id");
+    } |
+    lvalue '[' expr ']' {
+        debug_print("lvalue [ expr ]");
+    } ;
+
+//===----------------------------------------------------------------------===//
+// Declarations
+//===----------------------------------------------------------------------===//
+declaration_list:
+    declaration {
+        debug_print("declaration");
+    } |
+    declaration_list declaration {
+        debug_print("declaration-list declaration");
+    } ;
+declaration:
+    type_declaration {
+        debug_print("type-declaration");
+    } |
+    variable_declaration {
+        debug_print("variable-declaration");
+    } |
+    function_declaration {
+        debug_print("function-declaration");
+    } ;
+
+type_declaration:
+    K_TYPE id '=' type {
+        debug_print("type type-id = type");
+        typeset.insert($2);
+    } ;
+
+type:
+    typename {
+        debug_print("type-id");
+    } |
+    '{' '}' {
+        debug_print("{ }");
+    } |
+    '{' type_fields '}' {
+        debug_print("{ type-fields }");
+    } |
+    K_ARRAY K_OF typename {
+        debug_print("array of type-id");
+    } ;
+
+type_fields:
+    type_field {
+        debug_print("type-field");
+    } |
+    type_fields ',' type_field {
+        debug_print("type-fields , type-field");
+    } ;
+
+type_field:
+    id ':' typename {
+        debug_print("id : type-id");
+    } ;
+
+variable_declaration:
+    K_VAR id O_ASSIGN expr {
+        debug_print("var id := expr");
+    } |
+    K_VAR id ':' typename O_ASSIGN expr {
+        debug_print("var id : type-id := expr");
+    } ;
+
+function_declaration:
+    K_FUNC id '(' ')' '=' expr {
+        debug_print("function id ( ) = expr");
+    } |
+    K_FUNC id '(' type_fields ')' '=' expr {
+        debug_print("function id ( type-fields ) = expr");
+    } |
+    K_FUNC id '(' ')' ':' typename '=' expr {
+        debug_print("function id ( ) : type-id = expr");
+    } |
+    K_FUNC id '(' type_fields ')' ':' typename '=' expr {
+        debug_print("function id ( type-fields ) : type-id = expr");
+    } ;
+%%
+
+int main()
+{
+    if(!(yyin = fopen(TIGER_SOURCE, "r"))) {
+        std::cerr << "Cannot open tiger source file: \"" << TIGER_SOURCE << "\"" << std::endl;
+        return 1;
+    }
+    typeset = TypeSet();
+    yyparse();
+    return 0;
+}
+
+void yyerror(const char *msg)
+{
+    std::cout << "Error encountered: " << msg << std::endl;
+}

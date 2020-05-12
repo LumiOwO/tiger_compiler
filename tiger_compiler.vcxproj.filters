@@ -24,21 +24,18 @@
     <ClInclude Include="src\parser\parser.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="src\parser\parser.tab.hpp">
+    <ClInclude Include="src\parser\tiger.tab.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\toy.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="src\parser\AST.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\parser\parser.tab.cpp">
+    <ClCompile Include="src\parser\tiger.tab.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="src\parser\lex.yy.cpp">
+    <ClCompile Include="src\parser\tiger.yy.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -213,7 +210,7 @@
     <None Include="llvm\compiled\lib\Release\LLVM-C.exp" />
     <None Include="llvm\compiled\lib\Release\LTO.exp" />
     <None Include="llvm\compiled\lib\Release\Remarks.exp" />
-    <None Include="src\parser\parser.ypp" />
-    <None Include="src\parser\lex.l" />
+    <None Include="src\parser\tiger.l" />
+    <None Include="src\parser\tiger.ypp" />
   </ItemGroup>
 </Project>

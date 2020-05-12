@@ -73,26 +73,26 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>$(ProjectDir)\llvm\compiled\lib\Release;$(ProjectDir)\llvm\lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>Console</SubSystem>
     </Link>
     <PreBuildEvent>
       <Command>@set GNUWIN32_DIR=$(ProjectDir)GnuWin32\bin
 @set PARSER_DIR=$(ProjectDir)src\parser
 cd %PARSER_DIR%
-%GNUWIN32_DIR%\flex -o%PARSER_DIR%\lex.yy.cpp %PARSER_DIR%\lex.l
-%GNUWIN32_DIR%\bison -d %PARSER_DIR%\parser.ypp</Command>
+%GNUWIN32_DIR%\flex -o%PARSER_DIR%\tiger.yy.cpp %PARSER_DIR%\tiger.l
+%GNUWIN32_DIR%\bison -v -d %PARSER_DIR%\tiger.ypp</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\KaleidoscopeJIT.h" />
     <ClInclude Include="src\parser\AST.h" />
     <ClInclude Include="src\parser\parser.h" />
-    <ClInclude Include="src\parser\parser.tab.hpp" />
+    <ClInclude Include="src\parser\tiger.tab.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\parser\AST.cpp" />
-    <ClCompile Include="src\parser\lex.yy.cpp" />
-    <ClCompile Include="src\parser\parser.tab.cpp" />
-    <ClCompile Include="src\toy.cpp" />
+    <ClCompile Include="src\parser\tiger.tab.cpp" />
+    <ClCompile Include="src\parser\tiger.yy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="llvm\compiled\lib\Release\DynamicLibraryLib.lib" />
@@ -265,8 +265,8 @@ cd %PARSER_DIR%
     <None Include="llvm\compiled\lib\Release\LLVM-C.exp" />
     <None Include="llvm\compiled\lib\Release\LTO.exp" />
     <None Include="llvm\compiled\lib\Release\Remarks.exp" />
-    <None Include="src\parser\lex.l" />
-    <None Include="src\parser\parser.ypp" />
+    <None Include="src\parser\tiger.l" />
+    <None Include="src\parser\tiger.ypp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

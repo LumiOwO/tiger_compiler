@@ -39,8 +39,29 @@
    /* Put the tokens into the symbol table, so that GDB and other debuggers
       know about them.  */
    enum yytokentype {
-     FLOAT = 258,
-     INT = 259
+     K_NIL = 258,
+     K_IF = 259,
+     K_ELSE = 260,
+     K_WHILE = 261,
+     K_DO = 262,
+     K_FOR = 263,
+     K_TO = 264,
+     K_BREAK = 265,
+     K_THEN = 266,
+     K_IN = 267,
+     K_END = 268,
+     K_OF = 269,
+     K_TYPE = 270,
+     K_ARRAY = 271,
+     K_VAR = 272,
+     K_FUNC = 273,
+     K_LET = 274,
+     O_ASSIGN = 275,
+     O_COMPARE = 276,
+     C_STRING = 277,
+     C_INTEGER = 278,
+     T_ID = 279,
+     T_TYPE = 280
    };
 #endif
 

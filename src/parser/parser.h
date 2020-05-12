@@ -1,39 +1,34 @@
 #pragma once
 
-enum {
-    T_INT, T_FLOAT
+#define SHUZIXI_DEBUG
+#ifdef SHUZIXI_DEBUG
+#define debug_print(x) \
+    std::cout << "function " << __FUNCTION__ << " --- " << x << std::endl
+#else
+#define debug_print(x)
+#endif // SHUZIXI_DEBUG
+
+#define TIGER_SOURCE    "examples/test.tiger"
+
+#include <set>
+// Set for available typename
+class TypeSet {
+private:
+    std::set<std::string> _typeset;
+public:
+    TypeSet() {
+        _typeset.insert({ "int", "string" });
+    }
+    bool contains(std::string s) {
+        return _typeset.find(s) != _typeset.end();
+    }
+    void insert(std::string s) {
+        _typeset.insert(s);
+    }
 };
 
-typedef struct {
-    int type;
-    int i;
-    double f;
-} Type;
-
-extern int global_type;
-
-#define compute_op(res, a, op, b) 	\
-	if(global_type == T_INT) { 		\
-		res.type = T_INT; 			\
-		(res).i = (a).i op (b).i; 	\
-		(res).f = (double)(res).i; 	\
-	} else { 						\
-		res.type = T_FLOAT; 		\
-		(res).f = (a).f op (b).f; 	\
-		(res).i = (int)(res).f; 	\
-	}
-
-#define compute_func(res, func, a, b) 	\
-	if(global_type == T_INT) { 			\
-		res.type = T_INT; 				\
-		(res).i = func((a).i, (b).i); 	\
-		(res).f = (double)(res).i; 		\
-	} else { 							\
-		res.type = T_FLOAT; 			\
-		(res).f = func((a).f, (b).f); 	\
-		(res).i = (int)(res).f; 		\
-	}
+extern TypeSet typeset;
 
 #ifndef YYSTYPE
-#define YYSTYPE Type
+#define YYSTYPE std::string
 #endif
