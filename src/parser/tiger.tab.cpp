@@ -75,15 +75,16 @@
 
 extern FILE* yyin;
 extern int yylex();  
-extern void yyerror(const char *msg);
+extern void yyerror(AST* ast, const char *msg);
 
-// Set for typenames
-TypeSet typeset;
+std::set<std::string>   TigerParser::_typeset;
+std::ostringstream      TigerParser::_str_real;
+std::ostringstream      TigerParser::_str_label;
 
 
 
 /* Line 189 of yacc.c  */
-#line 87 "tiger.tab.cpp"
+#line 88 "tiger.tab.cpp"
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -150,7 +151,7 @@ typedef int YYSTYPE;
 
 
 /* Line 264 of yacc.c  */
-#line 154 "tiger.tab.cpp"
+#line 155 "tiger.tab.cpp"
 
 #ifdef short
 # undef short
@@ -365,16 +366,16 @@ union yyalloc
 /* YYFINAL -- State number of the termination state.  */
 #define YYFINAL  34
 /* YYLAST -- Last index in YYTABLE.  */
-#define YYLAST   358
+#define YYLAST   402
 
 /* YYNTOKENS -- Number of terminals.  */
 #define YYNTOKENS  45
 /* YYNNTS -- Number of nonterminals.  */
-#define YYNNTS  18
+#define YYNNTS  17
 /* YYNRULES -- Number of rules.  */
-#define YYNRULES  63
+#define YYNRULES  62
 /* YYNRULES -- Number of states.  */
-#define YYNSTATES  146
+#define YYNSTATES  143
 
 /* YYTRANSLATE(YYLEX) -- Bison symbol number corresponding to YYLEX.  */
 #define YYUNDEFTOK  2
@@ -389,16 +390,16 @@ static const yytype_uint8 yytranslate[] =
        0,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,    30,     2,
-      38,    39,    36,    34,    27,    35,    28,    37,     2,     2,
-       2,     2,     2,     2,     2,     2,     2,     2,    44,    26,
-      33,    31,    32,     2,     2,     2,     2,     2,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,    27,     2,
+      35,    36,    33,    31,    42,    32,    43,    34,     2,     2,
+       2,     2,     2,     2,     2,     2,     2,     2,    44,    41,
+      30,    28,    29,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,    42,     2,    43,     2,     2,     2,     2,     2,     2,
+       2,    39,     2,    40,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
-       2,     2,     2,    40,    29,    41,     2,     2,     2,     2,
+       2,     2,     2,    37,    26,    38,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
        2,     2,     2,     2,     2,     2,     2,     2,     2,     2,
@@ -427,51 +428,51 @@ static const yytype_uint8 yyprhs[] =
       60,    62,    66,    70,    75,    78,    82,    86,    91,    98,
      103,   110,   115,   124,   126,   131,   137,   139,   143,   145,
      149,   153,   159,   161,   165,   170,   172,   175,   177,   179,
-     181,   186,   188,   191,   195,   199,   201,   205,   209,   214,
-     221,   228,   236,   245
+     181,   186,   188,   191,   195,   199,   203,   209,   214,   221,
+     228,   236,   245
 };
 
 /* YYRHS -- A `-1'-separated list of the rules' RHS.  */
 static const yytype_int8 yyrhs[] =
 {
       46,     0,    -1,    50,    -1,    24,    -1,    25,    -1,    50,
-      21,    50,    -1,    50,    34,    50,    -1,    50,    35,    50,
-      -1,    50,    36,    50,    -1,    50,    37,    50,    -1,    50,
-      31,    50,    -1,    50,    30,    50,    -1,    50,    29,    50,
-      -1,    50,    32,    50,    -1,    50,    33,    50,    -1,    22,
-      -1,    23,    -1,     3,    -1,    54,    -1,    35,    50,    -1,
-      49,    -1,    54,    20,    50,    -1,    47,    38,    39,    -1,
-      47,    38,    52,    39,    -1,    38,    39,    -1,    38,    51,
-      39,    -1,    48,    40,    41,    -1,    48,    40,    53,    41,
-      -1,    48,    42,    50,    43,    14,    50,    -1,     4,    50,
+      21,    50,    -1,    50,    31,    50,    -1,    50,    32,    50,
+      -1,    50,    33,    50,    -1,    50,    34,    50,    -1,    50,
+      28,    50,    -1,    50,    27,    50,    -1,    50,    26,    50,
+      -1,    50,    29,    50,    -1,    50,    30,    50,    -1,    22,
+      -1,    23,    -1,     3,    -1,    54,    -1,    32,    50,    -1,
+      49,    -1,    54,    20,    50,    -1,    47,    35,    36,    -1,
+      47,    35,    52,    36,    -1,    35,    36,    -1,    35,    51,
+      36,    -1,    48,    37,    38,    -1,    48,    37,    53,    38,
+      -1,    48,    39,    50,    40,    14,    50,    -1,     4,    50,
       11,    50,    -1,     4,    50,    11,    50,     5,    50,    -1,
        6,    50,     7,    50,    -1,     8,    47,    20,    50,     9,
       50,     7,    50,    -1,    10,    -1,    19,    55,    12,    13,
-      -1,    19,    55,    12,    51,    13,    -1,    50,    -1,    51,
-      26,    50,    -1,    50,    -1,    52,    27,    50,    -1,    47,
-      31,    50,    -1,    53,    27,    47,    31,    50,    -1,    47,
-      -1,    54,    28,    47,    -1,    54,    42,    50,    43,    -1,
-      56,    -1,    55,    56,    -1,    57,    -1,    61,    -1,    62,
-      -1,    15,    47,    31,    58,    -1,    48,    -1,    40,    41,
-      -1,    40,    59,    41,    -1,    16,    14,    48,    -1,    60,
-      -1,    59,    27,    60,    -1,    47,    44,    48,    -1,    17,
+      -1,    19,    55,    12,    51,    13,    -1,    50,    -1,    50,
+      41,    51,    -1,    50,    -1,    50,    42,    52,    -1,    47,
+      28,    50,    -1,    47,    28,    50,    42,    53,    -1,    47,
+      -1,    54,    43,    47,    -1,    54,    39,    50,    40,    -1,
+      56,    -1,    56,    55,    -1,    57,    -1,    60,    -1,    61,
+      -1,    15,    47,    28,    58,    -1,    48,    -1,    37,    38,
+      -1,    37,    59,    38,    -1,    16,    14,    48,    -1,    47,
+      44,    48,    -1,    47,    44,    48,    42,    59,    -1,    17,
       47,    20,    50,    -1,    17,    47,    44,    48,    20,    50,
-      -1,    18,    47,    38,    39,    31,    50,    -1,    18,    47,
-      38,    59,    39,    31,    50,    -1,    18,    47,    38,    39,
-      44,    48,    31,    50,    -1,    18,    47,    38,    59,    39,
-      44,    48,    31,    50,    -1
+      -1,    18,    47,    35,    36,    28,    50,    -1,    18,    47,
+      35,    59,    36,    28,    50,    -1,    18,    47,    35,    36,
+      44,    48,    28,    50,    -1,    18,    47,    35,    59,    36,
+      44,    48,    28,    50,    -1
 };
 
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    39,    39,    45,    49,    55,    58,    61,    64,    67,
-      70,    73,    76,    79,    82,    90,    93,    96,    99,   102,
-     105,   108,   111,   114,   117,   120,   123,   126,   129,   132,
-     135,   138,   141,   144,   147,   150,   155,   158,   163,   166,
-     171,   174,   179,   182,   185,   193,   196,   200,   203,   206,
-     211,   217,   220,   223,   226,   231,   234,   239,   244,   247,
-     252,   255,   258,   261
+       0,    42,    42,    49,    54,    61,    67,    73,    79,    85,
+      91,    97,   103,   109,   115,   126,   130,   134,   138,   142,
+     148,   152,   156,   162,   168,   172,   176,   182,   188,   194,
+     198,   202,   206,   212,   216,   220,   226,   230,   236,   240,
+     246,   252,   260,   266,   272,   281,   285,   290,   294,   298,
+     304,   314,   320,   324,   328,   336,   344,   354,   360,   370,
+     376,   382,   390
 };
 #endif
 
@@ -483,13 +484,12 @@ static const char *const yytname[] =
   "$end", "error", "$undefined", "K_NIL", "K_IF", "K_ELSE", "K_WHILE",
   "K_DO", "K_FOR", "K_TO", "K_BREAK", "K_THEN", "K_IN", "K_END", "K_OF",
   "K_TYPE", "K_ARRAY", "K_VAR", "K_FUNC", "K_LET", "O_ASSIGN", "O_COMPARE",
-  "C_STRING", "C_INTEGER", "T_ID", "T_TYPE", "';'", "','", "'.'", "'|'",
-  "'&'", "'='", "'>'", "'<'", "'+'", "'-'", "'*'", "'/'", "'('", "')'",
-  "'{'", "'}'", "'['", "']'", "':'", "$accept", "S", "id", "typename",
+  "C_STRING", "C_INTEGER", "T_ID", "T_TYPE", "'|'", "'&'", "'='", "'>'",
+  "'<'", "'+'", "'-'", "'*'", "'/'", "'('", "')'", "'{'", "'}'", "'['",
+  "']'", "';'", "','", "'.'", "':'", "$accept", "S", "id", "typename",
   "binary_operation", "expr", "expr_seq", "expr_list", "field_list",
   "lvalue", "declaration_list", "declaration", "type_declaration", "type",
-  "type_fields", "type_field", "variable_declaration",
-  "function_declaration", 0
+  "type_fields", "variable_declaration", "function_declaration", 0
 };
 #endif
 
@@ -500,9 +500,9 @@ static const yytype_uint16 yytoknum[] =
 {
        0,   256,   257,   258,   259,   260,   261,   262,   263,   264,
      265,   266,   267,   268,   269,   270,   271,   272,   273,   274,
-     275,   276,   277,   278,   279,   280,    59,    44,    46,   124,
-      38,    61,    62,    60,    43,    45,    42,    47,    40,    41,
-     123,   125,    91,    93,    58
+     275,   276,   277,   278,   279,   280,   124,    38,    61,    62,
+      60,    43,    45,    42,    47,    40,    41,   123,   125,    91,
+      93,    59,    44,    46,    58
 };
 # endif
 
@@ -514,8 +514,8 @@ static const yytype_uint8 yyr1[] =
       50,    50,    50,    50,    50,    50,    50,    50,    50,    50,
       50,    50,    50,    50,    50,    50,    51,    51,    52,    52,
       53,    53,    54,    54,    54,    55,    55,    56,    56,    56,
-      57,    58,    58,    58,    58,    59,    59,    60,    61,    61,
-      62,    62,    62,    62
+      57,    58,    58,    58,    58,    59,    59,    60,    60,    61,
+      61,    61,    61
 };
 
 /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
@@ -526,8 +526,8 @@ static const yytype_uint8 yyr2[] =
        1,     3,     3,     4,     2,     3,     3,     4,     6,     4,
        6,     4,     8,     1,     4,     5,     1,     3,     1,     3,
        3,     5,     1,     3,     4,     1,     2,     1,     1,     1,
-       4,     1,     2,     3,     3,     1,     3,     3,     4,     6,
-       6,     7,     8,     9
+       4,     1,     2,     3,     3,     3,     5,     4,     6,     6,
+       7,     8,     9
 };
 
 /* YYDEFACT[STATE-NAME] -- Default rule to reduce with in state
@@ -542,50 +542,50 @@ static const yytype_uint8 yydefact[] =
        0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
        0,     0,     0,     0,     0,     0,     0,     0,    46,     0,
       25,    22,    38,     0,    26,     0,     0,     0,     5,    12,
-      11,    10,    13,    14,     6,     7,     8,     9,    21,    43,
-       0,    29,    31,     0,     0,     0,     0,     0,    34,     0,
-      37,     0,    23,     0,     0,    27,     0,    44,     0,     0,
-       0,     0,    51,    50,    58,     0,     0,     0,     0,    55,
-      35,    39,    40,     0,     0,    30,     0,     0,    52,     0,
-       0,     0,     0,     0,     0,     0,     0,    28,     0,    54,
-      53,    59,    60,     0,    57,    56,     0,     0,    41,    32,
-       0,    61,     0,    62,     0,    63
+      11,    10,    13,    14,     6,     7,     8,     9,    21,     0,
+      43,    29,    31,     0,     0,     0,     0,     0,    34,     0,
+      37,     0,    23,     0,    27,     0,    44,     0,     0,     0,
+       0,    51,    50,    57,     0,     0,     0,     0,    35,    39,
+      40,     0,    30,     0,     0,    52,     0,     0,     0,     0,
+       0,     0,     0,    28,     0,    54,    53,    58,    59,     0,
+      55,     0,     0,    41,    32,     0,     0,    60,     0,    61,
+      56,     0,    62
 };
 
 /* YYDEFGOTO[NTERM-NUM].  */
 static const yytype_int8 yydefgoto[] =
 {
       -1,    13,    14,    15,    16,    32,    33,    63,    66,    18,
-      25,    26,    27,   103,   108,   109,    28,    29
+      25,    26,    27,   102,   107,    28,    29
 };
 
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
    STATE-NUM.  */
-#define YYPACT_NINF -63
+#define YYPACT_NINF -87
 static const yytype_int16 yypact[] =
 {
-     185,   -63,   185,   185,   -16,   -63,    -2,   -63,   -63,   -63,
-     -63,   185,   139,    14,    20,   -33,   -63,   297,    34,   246,
-     195,    43,   -16,   -16,   -16,    72,   -63,   -63,   -63,   -63,
-      60,   -63,   297,    38,   -63,   162,   -20,   185,   185,   185,
-     185,   185,   185,   185,   185,   185,   185,   185,   185,   -16,
-     185,   185,   185,   185,   -13,    -8,    36,   100,   -63,   185,
-     -63,   -63,   297,    53,   -63,    41,    29,   263,   304,   120,
-     321,   304,   304,   304,    60,    60,   -63,   -63,   297,   -63,
-     280,    -4,   297,   229,    -6,   185,    57,   -19,   -63,    52,
-     297,   185,   -63,   185,   -16,   -63,    74,   -63,   185,   185,
-      86,   -18,   -63,   -63,   297,    81,    35,    58,    56,   -63,
-     -63,   297,   297,    76,   185,   297,   212,    57,   -63,    30,
-     185,   185,    57,    57,   -16,    42,   185,   297,   185,   -63,
-     -63,   297,   297,    78,   -63,   -63,   185,    57,   297,   297,
-     185,   297,    80,   297,   185,   297
+     191,   -87,   191,   191,   -17,   -87,    -9,   -87,   -87,   -87,
+     -87,   191,    80,    30,    -2,   -27,   -87,   340,    38,   246,
+     217,    14,   -17,   -17,   -17,    49,    -9,   -87,   -87,   -87,
+      45,   -87,   294,    29,   -87,   134,    35,   191,   191,   191,
+     191,   191,   191,   191,   191,   191,   191,   191,   191,   191,
+     -17,   191,   191,   191,    39,   -16,    34,   168,   -87,   191,
+     -87,   -87,   260,    40,   -87,    42,    51,   310,   354,   118,
+     368,   354,   354,   354,    45,    45,   -87,   -87,   340,   325,
+     -87,   201,   340,    -8,    55,   191,    47,   -19,   -87,    74,
+     -87,   191,   -87,   191,   -87,    81,   -87,   191,   191,    82,
+      36,   -87,   -87,   340,    86,   -13,    50,    64,   -87,   -87,
+     277,   191,   340,   232,    47,   -87,    63,   191,   191,    47,
+      47,   -12,   -17,   340,   191,   -87,   -87,   340,   340,    79,
+      66,   191,    47,   -87,   340,   191,   -17,   340,    85,   340,
+     -87,   191,   340
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -63,   -63,    45,   -62,   -63,     0,    48,   -63,   -63,   -63,
-     -63,    87,   -63,   -63,    15,    -9,   -63,   -63
+     -87,   -87,    32,   -57,   -87,     0,     7,    18,    -1,   -87,
+      84,   -87,   -87,   -87,   -86,   -87,   -87
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
@@ -595,82 +595,92 @@ static const yytype_int8 yypgoto[] =
 #define YYTABLE_NINF -1
 static const yytype_int16 yytable[] =
 {
-      17,    98,    19,    20,     9,     9,     9,    36,     9,    37,
-     100,    30,    85,    22,    34,    23,    24,    38,    84,    10,
-     106,    64,   102,   118,   105,    39,    40,    41,    42,    43,
-      44,    45,    46,    47,   101,    62,    86,    67,    68,    69,
-      70,    71,    72,    73,    74,    75,    76,    77,    78,    21,
-      80,    81,    82,    83,    48,   129,    94,   124,    35,    90,
-     133,   134,    49,    53,    59,   110,   121,    54,    55,    56,
-      95,   130,    93,   136,    87,   142,    50,    60,    59,   122,
-      91,    65,    10,   124,    57,   104,   137,    22,   114,    23,
-      24,   111,    92,   112,    79,   125,    46,    47,   115,   116,
-     117,   120,   123,     1,     2,    89,     3,   126,     4,   140,
-       5,   144,    58,    88,   127,   135,   119,     0,     0,     6,
-     131,   132,     7,     8,     9,    10,   138,     0,   139,     0,
-       0,     0,   107,     0,     0,    11,   141,     0,    12,   113,
-     143,    38,     1,     2,   145,     3,   107,     4,     0,     5,
-      40,    41,    42,    43,    44,    45,    46,    47,     6,     0,
-       0,     7,     8,     9,    10,     1,     2,     0,     3,   107,
-       4,     0,     5,     0,    11,     0,     0,    12,    31,     0,
-       0,     6,     0,     0,     7,     8,     9,    10,     1,     2,
-       0,     3,     0,     4,     0,     5,     0,    11,     0,     0,
-      12,    61,    52,     0,     6,     0,     0,     7,     8,     9,
-      10,     0,     0,     0,     0,     0,    38,     0,     0,   128,
-      11,     0,     0,    12,    39,    40,    41,    42,    43,    44,
-      45,    46,    47,    38,     0,     0,     0,     0,    99,     0,
-       0,    39,    40,    41,    42,    43,    44,    45,    46,    47,
-      38,     0,     0,     0,     0,     0,     0,    51,    39,    40,
+      17,    98,    19,    20,    85,     9,    22,     9,    23,    24,
+      36,    30,    37,    38,   116,   118,   131,   105,    39,    40,
+      41,    42,    43,    44,    45,    46,    47,   101,    86,   104,
+      34,   119,   132,    35,    53,    62,    21,    67,    68,    69,
+      70,    71,    72,    73,    74,    75,    76,    77,    78,    79,
+     140,    81,    82,    83,    54,    55,    56,   125,    48,     9,
+       9,    57,   129,   130,    89,    60,    90,    84,    65,    87,
+      93,    99,    10,    64,   115,   138,    92,    49,    46,    47,
+      10,    50,    80,     1,     2,   103,     3,   108,     4,    94,
+       5,    62,   100,   110,   120,   111,   114,   112,   113,     6,
+     121,   126,     7,     8,     9,    10,   117,   135,   136,   109,
+      58,   123,    11,   141,     0,    12,    31,   127,   128,   106,
+       0,   133,     0,     0,   134,     0,     0,     0,     0,     0,
+       0,   137,   106,     0,     0,   139,     0,     1,     2,    38,
+       3,   142,     4,     0,     5,    40,    41,    42,    43,    44,
+      45,    46,    47,     6,    65,     0,     7,     8,     9,    10,
+       0,     0,     0,     0,     0,     0,    11,     0,   106,    12,
+      61,     1,     2,     0,     3,     0,     4,     0,     5,     0,
+       0,    88,     0,     0,     0,     0,     0,     6,     0,     0,
+       7,     8,     9,    10,     1,     2,     0,     3,     0,     4,
+      11,     5,     0,    12,     0,     0,    97,     0,     0,     0,
+       6,     0,     0,     7,     8,     9,    10,     0,     0,     0,
+       0,     0,    38,    11,    52,     0,    12,    39,    40,    41,
+      42,    43,    44,    45,    46,    47,     0,     0,    38,   124,
+       0,     0,     0,    39,    40,    41,    42,    43,    44,    45,
+      46,    47,     0,    38,     0,     0,     0,    51,    39,    40,
       41,    42,    43,    44,    45,    46,    47,    38,     0,     0,
-       0,     0,     0,     0,     0,    39,    40,    41,    42,    43,
-      44,    45,    46,    47,    38,     0,     0,     0,     0,     0,
        0,     0,    39,    40,    41,    42,    43,    44,    45,    46,
-      47,    38,     0,     0,     0,     0,    96,     0,     0,    39,
-      40,    41,    42,    43,    44,    45,    46,    47,    38,     0,
-       0,     0,     0,    97,     0,    -1,    39,    40,    41,    42,
-      43,    44,    45,    46,    47,    -1,    -1,    -1,    44,    45,
-      46,    47,    38,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,    41,    42,    43,    44,    45,    46,    47
+      47,    38,     0,     0,     0,     0,    39,    40,    41,    42,
+      43,    44,    45,    46,    47,     0,     0,     0,    38,     0,
+       0,     0,    91,    39,    40,    41,    42,    43,    44,    45,
+      46,    47,     0,     0,     0,    38,     0,     0,     0,   122,
+      39,    40,    41,    42,    43,    44,    45,    46,    47,     0,
+       0,    38,     0,     0,     0,    59,    39,    40,    41,    42,
+      43,    44,    45,    46,    47,     0,    38,     0,     0,     0,
+      95,    39,    40,    41,    42,    43,    44,    45,    46,    47,
+       0,    38,     0,     0,     0,    96,    39,    40,    41,    42,
+      43,    44,    45,    46,    47,    -1,     0,     0,     0,     0,
+       0,     0,    -1,    -1,    -1,    44,    45,    46,    47,    38,
+       0,     0,     0,     0,     0,     0,    41,    42,    43,    44,
+      45,    46,    47
 };
 
 static const yytype_int16 yycheck[] =
 {
-       0,     5,     2,     3,    24,    24,    24,    40,    24,    42,
-      16,    11,    20,    15,     0,    17,    18,    21,    31,    25,
-      39,    41,    84,    41,    86,    29,    30,    31,    32,    33,
-      34,    35,    36,    37,    40,    35,    44,    37,    38,    39,
-      40,    41,    42,    43,    44,    45,    46,    47,    48,     4,
-      50,    51,    52,    53,    20,   117,    27,    27,    38,    59,
-     122,   123,    28,    20,    26,    13,    31,    22,    23,    24,
-      41,    41,    31,    31,    38,   137,    42,    39,    26,    44,
-      27,    36,    25,    27,    12,    85,    44,    15,    14,    17,
-      18,    91,    39,    93,    49,    39,    36,    37,    98,    99,
-      14,    20,    44,     3,     4,    57,     6,    31,     8,    31,
-      10,    31,    25,    13,   114,   124,   101,    -1,    -1,    19,
-     120,   121,    22,    23,    24,    25,   126,    -1,   128,    -1,
-      -1,    -1,    87,    -1,    -1,    35,   136,    -1,    38,    94,
-     140,    21,     3,     4,   144,     6,   101,     8,    -1,    10,
-      30,    31,    32,    33,    34,    35,    36,    37,    19,    -1,
-      -1,    22,    23,    24,    25,     3,     4,    -1,     6,   124,
-       8,    -1,    10,    -1,    35,    -1,    -1,    38,    39,    -1,
-      -1,    19,    -1,    -1,    22,    23,    24,    25,     3,     4,
-      -1,     6,    -1,     8,    -1,    10,    -1,    35,    -1,    -1,
-      38,    39,     7,    -1,    19,    -1,    -1,    22,    23,    24,
-      25,    -1,    -1,    -1,    -1,    -1,    21,    -1,    -1,     7,
-      35,    -1,    -1,    38,    29,    30,    31,    32,    33,    34,
-      35,    36,    37,    21,    -1,    -1,    -1,    -1,     9,    -1,
-      -1,    29,    30,    31,    32,    33,    34,    35,    36,    37,
-      21,    -1,    -1,    -1,    -1,    -1,    -1,    11,    29,    30,
-      31,    32,    33,    34,    35,    36,    37,    21,    -1,    -1,
-      -1,    -1,    -1,    -1,    -1,    29,    30,    31,    32,    33,
-      34,    35,    36,    37,    21,    -1,    -1,    -1,    -1,    -1,
-      -1,    -1,    29,    30,    31,    32,    33,    34,    35,    36,
-      37,    21,    -1,    -1,    -1,    -1,    43,    -1,    -1,    29,
-      30,    31,    32,    33,    34,    35,    36,    37,    21,    -1,
-      -1,    -1,    -1,    43,    -1,    21,    29,    30,    31,    32,
-      33,    34,    35,    36,    37,    31,    32,    33,    34,    35,
-      36,    37,    21,    -1,    -1,    -1,    -1,    -1,    -1,    -1,
-      -1,    -1,    31,    32,    33,    34,    35,    36,    37
+       0,     9,     2,     3,    20,    24,    15,    24,    17,    18,
+      37,    11,    39,    21,   100,    28,    28,    36,    26,    27,
+      28,    29,    30,    31,    32,    33,    34,    84,    44,    86,
+       0,    44,    44,    35,    20,    35,     4,    37,    38,    39,
+      40,    41,    42,    43,    44,    45,    46,    47,    48,    49,
+     136,    51,    52,    53,    22,    23,    24,   114,    20,    24,
+      24,    12,   119,   120,    57,    36,    59,    28,    36,    35,
+      28,    16,    25,    38,    38,   132,    36,    39,    33,    34,
+      25,    43,    50,     3,     4,    85,     6,    13,     8,    38,
+      10,    91,    37,    93,    44,    14,    14,    97,    98,    19,
+      36,    38,    22,    23,    24,    25,    20,    28,    42,    91,
+      26,   111,    32,    28,    -1,    35,    36,   117,   118,    87,
+      -1,   122,    -1,    -1,   124,    -1,    -1,    -1,    -1,    -1,
+      -1,   131,   100,    -1,    -1,   135,    -1,     3,     4,    21,
+       6,   141,     8,    -1,    10,    27,    28,    29,    30,    31,
+      32,    33,    34,    19,   122,    -1,    22,    23,    24,    25,
+      -1,    -1,    -1,    -1,    -1,    -1,    32,    -1,   136,    35,
+      36,     3,     4,    -1,     6,    -1,     8,    -1,    10,    -1,
+      -1,    13,    -1,    -1,    -1,    -1,    -1,    19,    -1,    -1,
+      22,    23,    24,    25,     3,     4,    -1,     6,    -1,     8,
+      32,    10,    -1,    35,    -1,    -1,     5,    -1,    -1,    -1,
+      19,    -1,    -1,    22,    23,    24,    25,    -1,    -1,    -1,
+      -1,    -1,    21,    32,     7,    -1,    35,    26,    27,    28,
+      29,    30,    31,    32,    33,    34,    -1,    -1,    21,     7,
+      -1,    -1,    -1,    26,    27,    28,    29,    30,    31,    32,
+      33,    34,    -1,    21,    -1,    -1,    -1,    11,    26,    27,
+      28,    29,    30,    31,    32,    33,    34,    21,    -1,    -1,
+      -1,    -1,    26,    27,    28,    29,    30,    31,    32,    33,
+      34,    21,    -1,    -1,    -1,    -1,    26,    27,    28,    29,
+      30,    31,    32,    33,    34,    -1,    -1,    -1,    21,    -1,
+      -1,    -1,    42,    26,    27,    28,    29,    30,    31,    32,
+      33,    34,    -1,    -1,    -1,    21,    -1,    -1,    -1,    42,
+      26,    27,    28,    29,    30,    31,    32,    33,    34,    -1,
+      -1,    21,    -1,    -1,    -1,    41,    26,    27,    28,    29,
+      30,    31,    32,    33,    34,    -1,    21,    -1,    -1,    -1,
+      40,    26,    27,    28,    29,    30,    31,    32,    33,    34,
+      -1,    21,    -1,    -1,    -1,    40,    26,    27,    28,    29,
+      30,    31,    32,    33,    34,    21,    -1,    -1,    -1,    -1,
+      -1,    -1,    28,    29,    30,    31,    32,    33,    34,    21,
+      -1,    -1,    -1,    -1,    -1,    -1,    28,    29,    30,    31,
+      32,    33,    34
 };
 
 /* YYSTOS[STATE-NUM] -- The (internal number of the) accessing
@@ -678,20 +688,20 @@ static const yytype_int16 yycheck[] =
 static const yytype_uint8 yystos[] =
 {
        0,     3,     4,     6,     8,    10,    19,    22,    23,    24,
-      25,    35,    38,    46,    47,    48,    49,    50,    54,    50,
-      50,    47,    15,    17,    18,    55,    56,    57,    61,    62,
-      50,    39,    50,    51,     0,    38,    40,    42,    21,    29,
-      30,    31,    32,    33,    34,    35,    36,    37,    20,    28,
-      42,    11,     7,    20,    47,    47,    47,    12,    56,    26,
-      39,    39,    50,    52,    41,    47,    53,    50,    50,    50,
-      50,    50,    50,    50,    50,    50,    50,    50,    50,    47,
-      50,    50,    50,    50,    31,    20,    44,    38,    13,    51,
-      50,    27,    39,    31,    27,    41,    43,    43,     5,     9,
-      16,    40,    48,    58,    50,    48,    39,    47,    59,    60,
-      13,    50,    50,    47,    14,    50,    50,    14,    41,    59,
-      20,    31,    44,    44,    27,    39,    31,    50,     7,    48,
-      41,    50,    50,    48,    48,    60,    31,    44,    50,    50,
-      31,    50,    48,    50,    31,    50
+      25,    32,    35,    46,    47,    48,    49,    50,    54,    50,
+      50,    47,    15,    17,    18,    55,    56,    57,    60,    61,
+      50,    36,    50,    51,     0,    35,    37,    39,    21,    26,
+      27,    28,    29,    30,    31,    32,    33,    34,    20,    39,
+      43,    11,     7,    20,    47,    47,    47,    12,    55,    41,
+      36,    36,    50,    52,    38,    47,    53,    50,    50,    50,
+      50,    50,    50,    50,    50,    50,    50,    50,    50,    50,
+      47,    50,    50,    50,    28,    20,    44,    35,    13,    51,
+      51,    42,    36,    28,    38,    40,    40,     5,     9,    16,
+      37,    48,    58,    50,    48,    36,    47,    59,    13,    52,
+      50,    14,    50,    50,    14,    38,    59,    20,    28,    44,
+      44,    36,    42,    50,     7,    48,    38,    50,    50,    48,
+      48,    28,    44,    53,    50,    28,    42,    50,    48,    50,
+      59,    28,    50
 };
 
 #define yyerrok		(yyerrstatus = 0)
@@ -724,7 +734,7 @@ do								\
     }								\
   else								\
     {								\
-      yyerror (YY_("syntax error: cannot back up")); \
+      yyerror (res, YY_("syntax error: cannot back up")); \
       YYERROR;							\
     }								\
 while (YYID (0))
@@ -804,7 +814,7 @@ do {									  \
     {									  \
       YYFPRINTF (stderr, "%s ", Title);					  \
       yy_symbol_print (stderr,						  \
-		  Type, Value); \
+		  Type, Value, res); \
       YYFPRINTF (stderr, "\n");						  \
     }									  \
 } while (YYID (0))
@@ -818,17 +828,19 @@ do {									  \
 #if (defined __STDC__ || defined __C99__FUNC__ \
      || defined __cplusplus || defined _MSC_VER)
 static void
-yy_symbol_value_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep)
+yy_symbol_value_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep, AST* &res)
 #else
 static void
-yy_symbol_value_print (yyoutput, yytype, yyvaluep)
+yy_symbol_value_print (yyoutput, yytype, yyvaluep, res)
     FILE *yyoutput;
     int yytype;
     YYSTYPE const * const yyvaluep;
+    AST* &res;
 #endif
 {
   if (!yyvaluep)
     return;
+  YYUSE (res);
 # ifdef YYPRINT
   if (yytype < YYNTOKENS)
     YYPRINT (yyoutput, yytoknum[yytype], *yyvaluep);
@@ -850,13 +862,14 @@ yy_symbol_value_print (yyoutput, yytype, yyvaluep)
 #if (defined __STDC__ || defined __C99__FUNC__ \
      || defined __cplusplus || defined _MSC_VER)
 static void
-yy_symbol_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep)
+yy_symbol_print (FILE *yyoutput, int yytype, YYSTYPE const * const yyvaluep, AST* &res)
 #else
 static void
-yy_symbol_print (yyoutput, yytype, yyvaluep)
+yy_symbol_print (yyoutput, yytype, yyvaluep, res)
     FILE *yyoutput;
     int yytype;
     YYSTYPE const * const yyvaluep;
+    AST* &res;
 #endif
 {
   if (yytype < YYNTOKENS)
@@ -864,7 +877,7 @@ yy_symbol_print (yyoutput, yytype, yyvaluep)
   else
     YYFPRINTF (yyoutput, "nterm %s (", yytname[yytype]);
 
-  yy_symbol_value_print (yyoutput, yytype, yyvaluep);
+  yy_symbol_value_print (yyoutput, yytype, yyvaluep, res);
   YYFPRINTF (yyoutput, ")");
 }
 
@@ -907,12 +920,13 @@ do {								\
 #if (defined __STDC__ || defined __C99__FUNC__ \
      || defined __cplusplus || defined _MSC_VER)
 static void
-yy_reduce_print (YYSTYPE *yyvsp, int yyrule)
+yy_reduce_print (YYSTYPE *yyvsp, int yyrule, AST* &res)
 #else
 static void
-yy_reduce_print (yyvsp, yyrule)
+yy_reduce_print (yyvsp, yyrule, res)
     YYSTYPE *yyvsp;
     int yyrule;
+    AST* &res;
 #endif
 {
   int yynrhs = yyr2[yyrule];
@@ -926,7 +940,7 @@ yy_reduce_print (yyvsp, yyrule)
       YYFPRINTF (stderr, "   $%d = ", yyi + 1);
       yy_symbol_print (stderr, yyrhs[yyprhs[yyrule] + yyi],
 		       &(yyvsp[(yyi + 1) - (yynrhs)])
-		       		       );
+		       		       , res);
       YYFPRINTF (stderr, "\n");
     }
 }
@@ -934,7 +948,7 @@ yy_reduce_print (yyvsp, yyrule)
 # define YY_REDUCE_PRINT(Rule)		\
 do {					\
   if (yydebug)				\
-    yy_reduce_print (yyvsp, Rule); \
+    yy_reduce_print (yyvsp, Rule, res); \
 } while (YYID (0))
 
 /* Nonzero means print parse trace.  It is left uninitialized so that
@@ -1185,16 +1199,18 @@ yysyntax_error (char *yyresult, int yystate, int yychar)
 #if (defined __STDC__ || defined __C99__FUNC__ \
      || defined __cplusplus || defined _MSC_VER)
 static void
-yydestruct (const char *yymsg, int yytype, YYSTYPE *yyvaluep)
+yydestruct (const char *yymsg, int yytype, YYSTYPE *yyvaluep, AST* &res)
 #else
 static void
-yydestruct (yymsg, yytype, yyvaluep)
+yydestruct (yymsg, yytype, yyvaluep, res)
     const char *yymsg;
     int yytype;
     YYSTYPE *yyvaluep;
+    AST* &res;
 #endif
 {
   YYUSE (yyvaluep);
+  YYUSE (res);
 
   if (!yymsg)
     yymsg = "Deleting";
@@ -1217,7 +1233,7 @@ int yyparse ();
 #endif
 #else /* ! YYPARSE_PARAM */
 #if defined __STDC__ || defined __cplusplus
-int yyparse (void);
+int yyparse (AST* &res);
 #else
 int yyparse ();
 #endif
@@ -1253,11 +1269,11 @@ yyparse (YYPARSE_PARAM)
 #if (defined __STDC__ || defined __C99__FUNC__ \
      || defined __cplusplus || defined _MSC_VER)
 int
-yyparse (void)
+yyparse (AST* &res)
 #else
 int
-yyparse ()
-
+yyparse (res)
+    AST* &res;
 #endif
 #endif
 {
@@ -1505,566 +1521,693 @@ yyreduce:
         case 2:
 
 /* Line 1455 of yacc.c  */
-#line 39 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 42 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
         debug_print("S");
+        res = (yyval) = (yyvsp[(1) - (1)]);
     ;}
     break;
 
   case 3:
 
 /* Line 1455 of yacc.c  */
-#line 45 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 49 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
         debug_print("ID");
+        (yyval) = (yyvsp[(1) - (1)]);
     ;}
     break;
 
   case 4:
 
 /* Line 1455 of yacc.c  */
-#line 49 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 54 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
         debug_print("typename");
+        (yyval) = (yyvsp[(1) - (1)]);
     ;}
     break;
 
   case 5:
 
 /* Line 1455 of yacc.c  */
-#line 55 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 61 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
-        debug_print("expr O_COMPARE expr");
+        LexAST* token = (LexAST*)(yyvsp[(2) - (3)]);
+        debug_print("expr" << token->text << "expr");
+        (yyval) = new BinaryExprAST((ExprAST*)(yyvsp[(1) - (3)]), token->text, (ExprAST*)(yyvsp[(3) - (3)]));
+        delete (yyvsp[(2) - (3)]);
     ;}
     break;
 
   case 6:
 
 /* Line 1455 of yacc.c  */
-#line 58 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 67 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
-        debug_print("expr + expr");
+        LexAST* token = (LexAST*)(yyvsp[(2) - (3)]);
+        debug_print("expr" << token->text << "expr");
+        (yyval) = new BinaryExprAST((ExprAST*)(yyvsp[(1) - (3)]), token->text, (ExprAST*)(yyvsp[(3) - (3)]));
+        delete (yyvsp[(2) - (3)]);
     ;}
     break;
 
   case 7:
 
 /* Line 1455 of yacc.c  */
-#line 61 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 73 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
-        debug_print("expr - expr");
+        LexAST* token = (LexAST*)(yyvsp[(2) - (3)]);
+        debug_print("expr" << token->text << "expr");
+        (yyval) = new BinaryExprAST((ExprAST*)(yyvsp[(1) - (3)]), token->text, (ExprAST*)(yyvsp[(3) - (3)]));
+        delete (yyvsp[(2) - (3)]);
     ;}
     break;
 
   case 8:
 
 /* Line 1455 of yacc.c  */
-#line 64 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 79 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
-        debug_print("expr * expr");
+        LexAST* token = (LexAST*)(yyvsp[(2) - (3)]);
+        debug_print("expr" << token->text << "expr");
+        (yyval) = new BinaryExprAST((ExprAST*)(yyvsp[(1) - (3)]), token->text, (ExprAST*)(yyvsp[(3) - (3)]));
+        delete (yyvsp[(2) - (3)]);
     ;}
     break;
 
   case 9:
 
 /* Line 1455 of yacc.c  */
-#line 67 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 85 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
-        debug_print("expr / expr");
+        LexAST* token = (LexAST*)(yyvsp[(2) - (3)]);
+        debug_print("expr" << token->text << "expr");
+        (yyval) = new BinaryExprAST((ExprAST*)(yyvsp[(1) - (3)]), token->text, (ExprAST*)(yyvsp[(3) - (3)]));
+        delete (yyvsp[(2) - (3)]);
     ;}
     break;
 
   case 10:
 
 /* Line 1455 of yacc.c  */
-#line 70 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 91 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
-        debug_print("expr = expr");
+        LexAST* token = (LexAST*)(yyvsp[(2) - (3)]);
+        debug_print("expr" << token->text << "expr");
+        (yyval) = new BinaryExprAST((ExprAST*)(yyvsp[(1) - (3)]), token->text, (ExprAST*)(yyvsp[(3) - (3)]));
+        delete (yyvsp[(2) - (3)]);
     ;}
     break;
 
   case 11:
 
 /* Line 1455 of yacc.c  */
-#line 73 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 97 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
-        debug_print("expr & expr");
+        LexAST* token = (LexAST*)(yyvsp[(2) - (3)]);
+        debug_print("expr" << token->text << "expr");
+        (yyval) = new BinaryExprAST((ExprAST*)(yyvsp[(1) - (3)]), token->text, (ExprAST*)(yyvsp[(3) - (3)]));
+        delete (yyvsp[(2) - (3)]);
     ;}
     break;
 
   case 12:
 
 /* Line 1455 of yacc.c  */
-#line 76 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 103 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
-        debug_print("expr | expr");
+        LexAST* token = (LexAST*)(yyvsp[(2) - (3)]);
+        debug_print("expr" << token->text << "expr");
+        (yyval) = new BinaryExprAST((ExprAST*)(yyvsp[(1) - (3)]), token->text, (ExprAST*)(yyvsp[(3) - (3)]));
+        delete (yyvsp[(2) - (3)]);
     ;}
     break;
 
   case 13:
 
 /* Line 1455 of yacc.c  */
-#line 79 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 109 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
-        debug_print("expr > expr");
+        LexAST* token = (LexAST*)(yyvsp[(2) - (3)]);
+        debug_print("expr" << token->text << "expr");
+        (yyval) = new BinaryExprAST((ExprAST*)(yyvsp[(1) - (3)]), token->text, (ExprAST*)(yyvsp[(3) - (3)]));
+        delete (yyvsp[(2) - (3)]);
     ;}
     break;
 
   case 14:
 
 /* Line 1455 of yacc.c  */
-#line 82 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 115 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
-        debug_print("expr < expr");
+        debug_print("expr" << (yyvsp[(2) - (3)])->label() << "expr");
+        LexAST* token = (LexAST*)(yyvsp[(2) - (3)]);
+        (yyval) = new BinaryExprAST((ExprAST*)(yyvsp[(1) - (3)]), token->text, (ExprAST*)(yyvsp[(3) - (3)]));
+        delete (yyvsp[(2) - (3)]);
     ;}
     break;
 
   case 15:
 
 /* Line 1455 of yacc.c  */
-#line 90 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 126 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
         debug_print("string-constant");
+        (yyval) = (yyvsp[(1) - (1)]);
     ;}
     break;
 
   case 16:
 
 /* Line 1455 of yacc.c  */
-#line 93 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 130 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
         debug_print("integer-constant");
+        (yyval) = (yyvsp[(1) - (1)]);
     ;}
     break;
 
   case 17:
 
 /* Line 1455 of yacc.c  */
-#line 96 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 134 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
         debug_print("nil");
+        (yyval) = new NilExprAST();
     ;}
     break;
 
   case 18:
 
 /* Line 1455 of yacc.c  */
-#line 99 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 138 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
         debug_print("lvalue");
+        (yyval) = new VarExprAST((VarAST*)(yyvsp[(1) - (1)]));
     ;}
     break;
 
   case 19:
 
 /* Line 1455 of yacc.c  */
-#line 102 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 142 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
         debug_print("- expr");
+        LexAST* token = (LexAST*)(yyvsp[(1) - (2)]);
+        (yyval) = new UnaryExprAST(token->text, (ExprAST*)(yyvsp[(2) - (2)]));
+        delete (yyvsp[(1) - (2)]);
     ;}
     break;
 
   case 20:
 
 /* Line 1455 of yacc.c  */
-#line 105 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 148 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
         debug_print("binary_operation");
+        (yyval) = (yyvsp[(1) - (1)]);
     ;}
     break;
 
   case 21:
 
 /* Line 1455 of yacc.c  */
-#line 108 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 152 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
         debug_print("lvalue := expr");
+        (yyval) = new AssignExprAST((VarAST*)(yyvsp[(1) - (3)]), (ExprAST*)(yyvsp[(3) - (3)]));
     ;}
     break;
 
   case 22:
 
 /* Line 1455 of yacc.c  */
-#line 111 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 156 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
         debug_print("id ( )");
+        LexAST* token = (LexAST*)(yyvsp[(1) - (3)]);
+        (yyval) = new FuncExprAST(token->text, nullptr);
+        delete (yyvsp[(1) - (3)]);
     ;}
     break;
 
   case 23:
 
 /* Line 1455 of yacc.c  */
-#line 114 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 162 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
         debug_print("id ( expr-list )");
+        LexAST* token = (LexAST*)(yyvsp[(1) - (4)]);
+        (yyval) = new FuncExprAST(token->text, (ExprListAST*)(yyvsp[(3) - (4)]));
+        delete (yyvsp[(1) - (4)]);
     ;}
     break;
 
   case 24:
 
 /* Line 1455 of yacc.c  */
-#line 117 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 168 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
         debug_print("( )");
+        (yyval) = new SequenceExprAST(nullptr);
     ;}
     break;
 
   case 25:
 
 /* Line 1455 of yacc.c  */
-#line 120 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 172 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
         debug_print("( expr-seq )");
+        (yyval) = new SequenceExprAST((ExprListAST*)(yyvsp[(2) - (3)]));
     ;}
     break;
 
   case 26:
 
 /* Line 1455 of yacc.c  */
-#line 123 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 176 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
         debug_print("type-id { }");
+        LexAST* token = (LexAST*)(yyvsp[(1) - (3)]);
+        (yyval) = new RecordDefineExprAST(token->text, nullptr);
+        delete (yyvsp[(1) - (3)]);
     ;}
     break;
 
   case 27:
 
 /* Line 1455 of yacc.c  */
-#line 126 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 182 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
         debug_print("type-id { field-list }");
+        LexAST* token = (LexAST*)(yyvsp[(1) - (4)]);
+        (yyval) = new RecordDefineExprAST(token->text, (FieldListAST*)(yyvsp[(3) - (4)]));
+        delete (yyvsp[(1) - (4)]);
     ;}
     break;
 
   case 28:
 
 /* Line 1455 of yacc.c  */
-#line 129 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 188 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
         debug_print("type-id [ expr ] of expr");
+        LexAST* token = (LexAST*)(yyvsp[(1) - (6)]);
+        (yyval) = new ArrayDefineExprAST(token->text, (ExprAST*)(yyvsp[(3) - (6)]), (ExprAST*)(yyvsp[(6) - (6)]));
+        delete (yyvsp[(1) - (6)]);
     ;}
     break;
 
   case 29:
 
 /* Line 1455 of yacc.c  */
-#line 132 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 194 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
         debug_print("if expr then expr");
+        (yyval) = new IfExprAST((ExprAST*)(yyvsp[(2) - (4)]), (ExprAST*)(yyvsp[(4) - (4)]), nullptr);
     ;}
     break;
 
   case 30:
 
 /* Line 1455 of yacc.c  */
-#line 135 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 198 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
         debug_print("if expr then expr else expr");
+        (yyval) = new IfExprAST((ExprAST*)(yyvsp[(2) - (6)]), (ExprAST*)(yyvsp[(4) - (6)]), (ExprAST*)(yyvsp[(6) - (6)]));
     ;}
     break;
 
   case 31:
 
 /* Line 1455 of yacc.c  */
-#line 138 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 202 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
         debug_print("while expr do expr");
+        (yyval) = new WhileExprAST((ExprAST*)(yyvsp[(2) - (4)]), (ExprAST*)(yyvsp[(4) - (4)]));
     ;}
     break;
 
   case 32:
 
 /* Line 1455 of yacc.c  */
-#line 141 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 206 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
         debug_print("for id := expr to expr do expr");
+        LexAST* token = (LexAST*)(yyvsp[(2) - (8)]);
+        (yyval) = new ForExprAST(token->text, (ExprAST*)(yyvsp[(4) - (8)]), (ExprAST*)(yyvsp[(6) - (8)]), (ExprAST*)(yyvsp[(8) - (8)]));
+        delete (yyvsp[(2) - (8)]);
     ;}
     break;
 
   case 33:
 
 /* Line 1455 of yacc.c  */
-#line 144 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 212 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
         debug_print("break");
+        (yyval) = new BreakExprAST();
     ;}
     break;
 
   case 34:
 
 /* Line 1455 of yacc.c  */
-#line 147 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 216 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
         debug_print("let declaration-list in end");
+        (yyval) = new LetExprAST((DeclListAST*)(yyvsp[(2) - (4)]), nullptr);
     ;}
     break;
 
   case 35:
 
 /* Line 1455 of yacc.c  */
-#line 150 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 220 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
         debug_print("let declaration-list in expr-seq end");
+        (yyval) = new LetExprAST((DeclListAST*)(yyvsp[(2) - (5)]), (ExprListAST*)(yyvsp[(4) - (5)]));
     ;}
     break;
 
   case 36:
 
 /* Line 1455 of yacc.c  */
-#line 155 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 226 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
         debug_print("expr");
+        (yyval) = new ExprListAST((ExprAST*)(yyvsp[(1) - (1)]), nullptr);
     ;}
     break;
 
   case 37:
 
 /* Line 1455 of yacc.c  */
-#line 158 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 230 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
-        debug_print("expr-seq ; expr");
+        debug_print("expr ; expr-seq");
+        (yyval) = new ExprListAST((ExprAST*)(yyvsp[(1) - (3)]), (ExprListAST*)(yyvsp[(3) - (3)]));
     ;}
     break;
 
   case 38:
 
 /* Line 1455 of yacc.c  */
-#line 163 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 236 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
         debug_print("expr");
+        (yyval) = new ExprListAST((ExprAST*)(yyvsp[(1) - (1)]), nullptr);
     ;}
     break;
 
   case 39:
 
 /* Line 1455 of yacc.c  */
-#line 166 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 240 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
-        debug_print("expr-list , expr");
+        debug_print("expr , expr-list");
+        (yyval) = new ExprListAST((ExprAST*)(yyvsp[(1) - (3)]), (ExprListAST*)(yyvsp[(3) - (3)]));
     ;}
     break;
 
   case 40:
 
 /* Line 1455 of yacc.c  */
-#line 171 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 246 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
         debug_print("id = expr");
+        LexAST* token = (LexAST*)(yyvsp[(1) - (3)]);
+        (yyval) = new FieldListAST(token->text, (ExprAST*)(yyvsp[(3) - (3)]), nullptr);
+        delete (yyvsp[(1) - (3)]);
     ;}
     break;
 
   case 41:
 
 /* Line 1455 of yacc.c  */
-#line 174 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 252 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
-        debug_print("field-list , id = expr");
+        debug_print("id = expr , field-list");
+        LexAST* token = (LexAST*)(yyvsp[(1) - (5)]);
+        (yyval) = new FieldListAST(token->text, (ExprAST*)(yyvsp[(3) - (5)]), (FieldListAST*)(yyvsp[(5) - (5)]));
+        delete (yyvsp[(1) - (5)]);
     ;}
     break;
 
   case 42:
 
 /* Line 1455 of yacc.c  */
-#line 179 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 260 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
         debug_print("id");
+        LexAST* token = (LexAST*)(yyvsp[(1) - (1)]);
+        (yyval) = new SimpleVarAST(token->text);
+        delete (yyvsp[(1) - (1)]);
     ;}
     break;
 
   case 43:
 
 /* Line 1455 of yacc.c  */
-#line 182 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 266 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
         debug_print("lvalue . id");
+        LexAST* token = (LexAST*)(yyvsp[(3) - (3)]);
+        (yyval) = new FieldVarAST((VarAST*)(yyvsp[(1) - (3)]), token->text);
+        delete (yyvsp[(3) - (3)]);
     ;}
     break;
 
   case 44:
 
 /* Line 1455 of yacc.c  */
-#line 185 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 272 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
         debug_print("lvalue [ expr ]");
+        (yyval) = new IndexVarAST((VarAST*)(yyvsp[(1) - (4)]), (ExprAST*)(yyvsp[(3) - (4)]));
     ;}
     break;
 
   case 45:
 
 /* Line 1455 of yacc.c  */
-#line 193 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 281 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
         debug_print("declaration");
+        (yyval) = new DeclListAST((DeclAST*)(yyvsp[(1) - (1)]), nullptr);
     ;}
     break;
 
   case 46:
 
 /* Line 1455 of yacc.c  */
-#line 196 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 285 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
         debug_print("declaration-list declaration");
+        (yyval) = new DeclListAST((DeclAST*)(yyvsp[(1) - (2)]), (DeclListAST*)(yyvsp[(2) - (2)]));
     ;}
     break;
 
   case 47:
 
 /* Line 1455 of yacc.c  */
-#line 200 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 290 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
         debug_print("type-declaration");
+        (yyval) = (yyvsp[(1) - (1)]);
     ;}
     break;
 
   case 48:
 
 /* Line 1455 of yacc.c  */
-#line 203 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 294 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
         debug_print("variable-declaration");
+        (yyval) = (yyvsp[(1) - (1)]);
     ;}
     break;
 
   case 49:
 
 /* Line 1455 of yacc.c  */
-#line 206 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 298 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
         debug_print("function-declaration");
+        (yyval) = (yyvsp[(1) - (1)]);
     ;}
     break;
 
   case 50:
 
 /* Line 1455 of yacc.c  */
-#line 211 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 304 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
         debug_print("type type-id = type");
-        typeset.insert((yyvsp[(2) - (4)]));
+        LexAST* token = (LexAST*)(yyvsp[(2) - (4)]);
+        (yyval) = new TypeDeclAST(token->text, (TypeAST*)(yyvsp[(4) - (4)]));
+        
+        TigerParser::insert(token->text);
+        delete (yyvsp[(2) - (4)]);
     ;}
     break;
 
   case 51:
 
 /* Line 1455 of yacc.c  */
-#line 217 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 314 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
         debug_print("type-id");
+        LexAST* token = (LexAST*)(yyvsp[(1) - (1)]);
+        (yyval) = new SimpleTypeAST(token->text);
+        delete (yyvsp[(1) - (1)]);
     ;}
     break;
 
   case 52:
 
 /* Line 1455 of yacc.c  */
-#line 220 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 320 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
         debug_print("{ }");
+        (yyval) = new RecordTypeAST(nullptr);
     ;}
     break;
 
   case 53:
 
 /* Line 1455 of yacc.c  */
-#line 223 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 324 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
         debug_print("{ type-fields }");
+        (yyval) = new RecordTypeAST((TypeFieldsAST*)(yyvsp[(2) - (3)]));
     ;}
     break;
 
   case 54:
 
 /* Line 1455 of yacc.c  */
-#line 226 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 328 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
         debug_print("array of type-id");
+        LexAST* token = (LexAST*)(yyvsp[(3) - (3)]);
+        (yyval) = new ArrayTypeAST(token->text);
+        delete (yyvsp[(3) - (3)]);
     ;}
     break;
 
   case 55:
 
 /* Line 1455 of yacc.c  */
-#line 231 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 336 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
-        debug_print("type-field");
+        debug_print("id : typename");
+        LexAST* token1 = (LexAST*)(yyvsp[(1) - (3)]);
+        LexAST* token3 = (LexAST*)(yyvsp[(3) - (3)]);
+        (yyval) = new TypeFieldsAST(token1->text, token3->text, nullptr);
+        delete (yyvsp[(1) - (3)]);
+        delete (yyvsp[(3) - (3)]);
     ;}
     break;
 
   case 56:
 
 /* Line 1455 of yacc.c  */
-#line 234 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 344 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
-        debug_print("type-fields , type-field");
+        debug_print("id : typename , type-fields");
+        LexAST* token1 = (LexAST*)(yyvsp[(1) - (5)]);
+        LexAST* token3 = (LexAST*)(yyvsp[(3) - (5)]);
+        (yyval) = new TypeFieldsAST(token1->text, token3->text, (TypeFieldsAST*)(yyvsp[(5) - (5)]));
+        delete (yyvsp[(1) - (5)]);
+        delete (yyvsp[(3) - (5)]);
     ;}
     break;
 
   case 57:
 
 /* Line 1455 of yacc.c  */
-#line 239 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 354 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
-        debug_print("id : type-id");
+        debug_print("var id := expr");
+        LexAST* token = (LexAST*)(yyvsp[(2) - (4)]);
+        (yyval) = new VarDeclAST(token->text, nullptr, (ExprAST*)(yyvsp[(4) - (4)]));
+        delete (yyvsp[(2) - (4)]);
     ;}
     break;
 
   case 58:
 
 /* Line 1455 of yacc.c  */
-#line 244 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 360 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
-        debug_print("var id := expr");
+        debug_print("var id : type-id := expr");
+        LexAST* token2 = (LexAST*)(yyvsp[(2) - (6)]);
+        LexAST* token4 = (LexAST*)(yyvsp[(4) - (6)]);
+        (yyval) = new VarDeclAST(token2->text, new SimpleTypeAST(token4->text), (ExprAST*)(yyvsp[(6) - (6)]));
+        delete (yyvsp[(2) - (6)]);
+        delete (yyvsp[(4) - (6)]);
     ;}
     break;
 
   case 59:
 
 /* Line 1455 of yacc.c  */
-#line 247 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 370 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
-        debug_print("var id : type-id := expr");
+        debug_print("function id ( ) = expr");
+        LexAST* token = (LexAST*)(yyvsp[(2) - (6)]);
+        (yyval) = new FuncDeclAST(token->text, nullptr, nullptr, (ExprAST*)(yyvsp[(6) - (6)]));
+        delete (yyvsp[(2) - (6)]);
     ;}
     break;
 
   case 60:
 
 /* Line 1455 of yacc.c  */
-#line 252 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 376 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
-        debug_print("function id ( ) = expr");
+        debug_print("function id ( type-fields ) = expr");
+        LexAST* token = (LexAST*)(yyvsp[(2) - (7)]);
+        (yyval) = new FuncDeclAST(token->text, (TypeFieldsAST*)(yyvsp[(4) - (7)]), nullptr, (ExprAST*)(yyvsp[(7) - (7)]));
+        delete (yyvsp[(2) - (7)]);
     ;}
     break;
 
   case 61:
 
 /* Line 1455 of yacc.c  */
-#line 255 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 382 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
-        debug_print("function id ( type-fields ) = expr");
+        debug_print("function id ( ) : type-id = expr");
+        LexAST* token2 = (LexAST*)(yyvsp[(2) - (8)]);
+        LexAST* token6 = (LexAST*)(yyvsp[(6) - (8)]);
+        (yyval) = new FuncDeclAST(token2->text, nullptr, new SimpleTypeAST(token6->text), (ExprAST*)(yyvsp[(8) - (8)]));
+        delete (yyvsp[(2) - (8)]);
+        delete (yyvsp[(6) - (8)]);
     ;}
     break;
 
   case 62:
 
 /* Line 1455 of yacc.c  */
-#line 258 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
-    {
-        debug_print("function id ( ) : type-id = expr");
-    ;}
-    break;
-
-  case 63:
-
-/* Line 1455 of yacc.c  */
-#line 261 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 390 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
     {
         debug_print("function id ( type-fields ) : type-id = expr");
+        LexAST* token2 = (LexAST*)(yyvsp[(2) - (9)]);
+        LexAST* token7 = (LexAST*)(yyvsp[(7) - (9)]);
+        (yyval) = new FuncDeclAST(token2->text, (TypeFieldsAST*)(yyvsp[(4) - (9)]), new SimpleTypeAST(token7->text), (ExprAST*)(yyvsp[(9) - (9)]));
+        delete (yyvsp[(2) - (9)]);
+        delete (yyvsp[(7) - (9)]);
     ;}
     break;
 
 
 
 /* Line 1455 of yacc.c  */
-#line 2068 "tiger.tab.cpp"
+#line 2211 "tiger.tab.cpp"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2099,7 +2242,7 @@ yyerrlab:
     {
       ++yynerrs;
 #if ! YYERROR_VERBOSE
-      yyerror (YY_("syntax error"));
+      yyerror (res, YY_("syntax error"));
 #else
       {
 	YYSIZE_T yysize = yysyntax_error (0, yystate, yychar);
@@ -2123,11 +2266,11 @@ yyerrlab:
 	if (0 < yysize && yysize <= yymsg_alloc)
 	  {
 	    (void) yysyntax_error (yymsg, yystate, yychar);
-	    yyerror (yymsg);
+	    yyerror (res, yymsg);
 	  }
 	else
 	  {
-	    yyerror (YY_("syntax error"));
+	    yyerror (res, YY_("syntax error"));
 	    if (yysize != 0)
 	      goto yyexhaustedlab;
 	  }
@@ -2151,7 +2294,7 @@ yyerrlab:
       else
 	{
 	  yydestruct ("Error: discarding",
-		      yytoken, &yylval);
+		      yytoken, &yylval, res);
 	  yychar = YYEMPTY;
 	}
     }
@@ -2207,7 +2350,7 @@ yyerrlab1:
 
 
       yydestruct ("Error: popping",
-		  yystos[yystate], yyvsp);
+		  yystos[yystate], yyvsp, res);
       YYPOPSTACK (1);
       yystate = *yyssp;
       YY_STACK_PRINT (yyss, yyssp);
@@ -2242,7 +2385,7 @@ yyabortlab:
 | yyexhaustedlab -- memory exhaustion comes here.  |
 `-------------------------------------------------*/
 yyexhaustedlab:
-  yyerror (YY_("memory exhausted"));
+  yyerror (res, YY_("memory exhausted"));
   yyresult = 2;
   /* Fall through.  */
 #endif
@@ -2250,7 +2393,7 @@ yyexhaustedlab:
 yyreturn:
   if (yychar != YYEMPTY)
      yydestruct ("Cleanup: discarding lookahead",
-		 yytoken, &yylval);
+		 yytoken, &yylval, res);
   /* Do not reclaim the symbols of the rule which action triggered
      this YYABORT or YYACCEPT.  */
   YYPOPSTACK (yylen);
@@ -2258,7 +2401,7 @@ yyreturn:
   while (yyssp != yyss)
     {
       yydestruct ("Cleanup: popping",
-		  yystos[*yyssp], yyvsp);
+		  yystos[*yyssp], yyvsp, res);
       YYPOPSTACK (1);
     }
 #ifndef yyoverflow
@@ -2276,21 +2419,26 @@ yyreturn:
 
 
 /* Line 1675 of yacc.c  */
-#line 264 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
+#line 398 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.ypp"
 
 
-int main()
+AST* TigerParser::parse(const char *filepath)
 {
-    if(!(yyin = fopen(TIGER_SOURCE, "r"))) {
-        std::cerr << "Cannot open tiger source file: \"" << TIGER_SOURCE << "\"" << std::endl;
-        return 1;
+    std::cout << "Begin Parsing \"" << filepath << "\"...\n";
+    if(!(yyin = fopen(filepath, "r"))) {
+        std::cerr << "Cannot open tiger source file: \"" << filepath << "\"" << std::endl;
+        exit(1);
+        return nullptr;
     }
-    typeset = TypeSet();
-    yyparse();
-    return 0;
+    TigerParser::reset();
+
+    AST *res;
+    yyparse(res);
+    std::cout << "End Parsing." << std::endl;
+    return res;
 }
 
-void yyerror(const char *msg)
+void yyerror(AST* ast, const char *msg)
 {
     std::cout << "Error encountered: " << msg << std::endl;
 }

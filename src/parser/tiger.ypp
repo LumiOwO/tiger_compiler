@@ -4,10 +4,11 @@
 
 extern FILE* yyin;
 extern int yylex();  
-extern void yyerror(const char *msg);
+extern void yyerror(AST* ast, const char *msg);
 
-// Set for typenames
-TypeSet typeset;
+std::set<std::string>   TigerParser::_typeset;
+std::ostringstream      TigerParser::_str_real;
+std::ostringstream      TigerParser::_str_label;
 
 %}
 
@@ -22,7 +23,6 @@ TypeSet typeset;
 %token T_ID T_TYPE
 
 // Priority
-%left ';' ',' '.'
 %nonassoc K_DO K_OF
 %nonassoc K_THEN
 %nonassoc K_ELSE
@@ -33,54 +33,90 @@ TypeSet typeset;
 %left '+' '-'
 %left '*' '/'
 
+// Argument to store the whole AST
+%parse-param {AST* &res}
+
 %%
 // Start symbol
 S: 
     expr {
         debug_print("S");
+        res = $$ = $1;
     };
 
 // ID
 id: 
     T_ID {
         debug_print("ID");
+        $$ = $1;
     };
 typename: 
     T_TYPE {
         debug_print("typename");
+        $$ = $1;
     };
 
 // Binary operation
 binary_operation:
     expr O_COMPARE expr {
-        debug_print("expr O_COMPARE expr");
+        LexAST* token = (LexAST*)$2;
+        debug_print("expr" << token->text << "expr");
+        $$ = new BinaryExprAST((ExprAST*)$1, token->text, (ExprAST*)$3);
+        delete $2;
     } |
-    expr '+' expr {
-        debug_print("expr + expr");
+    expr '+' expr       {
+        LexAST* token = (LexAST*)$2;
+        debug_print("expr" << token->text << "expr");
+        $$ = new BinaryExprAST((ExprAST*)$1, token->text, (ExprAST*)$3);
+        delete $2;
     } |
-    expr '-' expr {
-        debug_print("expr - expr");
+    expr '-' expr       {
+        LexAST* token = (LexAST*)$2;
+        debug_print("expr" << token->text << "expr");
+        $$ = new BinaryExprAST((ExprAST*)$1, token->text, (ExprAST*)$3);
+        delete $2;
     } |
-    expr '*' expr {
-        debug_print("expr * expr");
+    expr '*' expr       {
+        LexAST* token = (LexAST*)$2;
+        debug_print("expr" << token->text << "expr");
+        $$ = new BinaryExprAST((ExprAST*)$1, token->text, (ExprAST*)$3);
+        delete $2;
     } |
-    expr '/' expr {
-        debug_print("expr / expr");
+    expr '/' expr       {
+        LexAST* token = (LexAST*)$2;
+        debug_print("expr" << token->text << "expr");
+        $$ = new BinaryExprAST((ExprAST*)$1, token->text, (ExprAST*)$3);
+        delete $2;
     } |
-    expr '=' expr {
-        debug_print("expr = expr");
+    expr '=' expr       {
+        LexAST* token = (LexAST*)$2;
+        debug_print("expr" << token->text << "expr");
+        $$ = new BinaryExprAST((ExprAST*)$1, token->text, (ExprAST*)$3);
+        delete $2;
     } |
-    expr '&' expr {
-        debug_print("expr & expr");
+    expr '&' expr       {
+        LexAST* token = (LexAST*)$2;
+        debug_print("expr" << token->text << "expr");
+        $$ = new BinaryExprAST((ExprAST*)$1, token->text, (ExprAST*)$3);
+        delete $2;
     } |
-    expr '|' expr {
-        debug_print("expr | expr");
+    expr '|' expr       {
+        LexAST* token = (LexAST*)$2;
+        debug_print("expr" << token->text << "expr");
+        $$ = new BinaryExprAST((ExprAST*)$1, token->text, (ExprAST*)$3);
+        delete $2;
     } |
-    expr '>' expr {
-        debug_print("expr > expr");
+    expr '>' expr       {
+        LexAST* token = (LexAST*)$2;
+        debug_print("expr" << token->text << "expr");
+        $$ = new BinaryExprAST((ExprAST*)$1, token->text, (ExprAST*)$3);
+        delete $2;
     } |
     expr '<' expr {
-        debug_print("expr < expr");
+        debug_print("expr" << $2->label() << "expr");
+        LexAST* token = (LexAST*)$2;
+        $$ = new BinaryExprAST((ExprAST*)$1, token->text, (ExprAST*)$3);
+        delete $2;
     } ;
 
 //===----------------------------------------------------------------------===//
@@ -89,101 +125,153 @@ binary_operation:
 expr:
     C_STRING {
         debug_print("string-constant");
+        $$ = $1;
     } |
     C_INTEGER {
         debug_print("integer-constant");
+        $$ = $1;
     } |
     K_NIL {
         debug_print("nil");
+        $$ = new NilExprAST();
     } |
     lvalue {
         debug_print("lvalue");
+        $$ = new VarExprAST((VarAST*)$1);
     } |
     '-' expr {
         debug_print("- expr");
+        LexAST* token = (LexAST*)$1;
+        $$ = new UnaryExprAST(token->text, (ExprAST*)$2);
+        delete $1;
     } |
     binary_operation {
         debug_print("binary_operation");
+        $$ = $1;
     } |
     lvalue O_ASSIGN expr {
         debug_print("lvalue := expr");
+        $$ = new AssignExprAST((VarAST*)$1, (ExprAST*)$3);
     } |
     id '(' ')' {
         debug_print("id ( )");
+        LexAST* token = (LexAST*)$1;
+        $$ = new FuncExprAST(token->text, nullptr);
+        delete $1;
     } |
     id '(' expr_list ')' {
         debug_print("id ( expr-list )");
+        LexAST* token = (LexAST*)$1;
+        $$ = new FuncExprAST(token->text, (ExprListAST*)$3);
+        delete $1;
     } |
     '(' ')' {
         debug_print("( )");
+        $$ = new SequenceExprAST(nullptr);
     } |
     '(' expr_seq ')' {
         debug_print("( expr-seq )");
+        $$ = new SequenceExprAST((ExprListAST*)$2);
     } |
     typename '{' '}' {
         debug_print("type-id { }");
+        LexAST* token = (LexAST*)$1;
+        $$ = new RecordDefineExprAST(token->text, nullptr);
+        delete $1;
     } |
     typename '{' field_list '}' {
         debug_print("type-id { field-list }");
+        LexAST* token = (LexAST*)$1;
+        $$ = new RecordDefineExprAST(token->text, (FieldListAST*)$3);
+        delete $1;
     } |
     typename '[' expr ']' K_OF expr {
         debug_print("type-id [ expr ] of expr");
+        LexAST* token = (LexAST*)$1;
+        $$ = new ArrayDefineExprAST(token->text, (ExprAST*)$3, (ExprAST*)$6);
+        delete $1;
     } |
     K_IF expr K_THEN expr {
         debug_print("if expr then expr");
+        $$ = new IfExprAST((ExprAST*)$2, (ExprAST*)$4, nullptr);
     } |
     K_IF expr K_THEN expr K_ELSE expr {
         debug_print("if expr then expr else expr");
+        $$ = new IfExprAST((ExprAST*)$2, (ExprAST*)$4, (ExprAST*)$6);
     } |
     K_WHILE expr K_DO expr {
         debug_print("while expr do expr");
+        $$ = new WhileExprAST((ExprAST*)$2, (ExprAST*)$4);
     } |
     K_FOR id O_ASSIGN expr K_TO expr K_DO expr {
         debug_print("for id := expr to expr do expr");
+        LexAST* token = (LexAST*)$2;
+        $$ = new ForExprAST(token->text, (ExprAST*)$4, (ExprAST*)$6, (ExprAST*)$8);
+        delete $2;
     } |
     K_BREAK {
         debug_print("break");
+        $$ = new BreakExprAST();
     } |
     K_LET declaration_list K_IN K_END {
         debug_print("let declaration-list in end");
+        $$ = new LetExprAST((DeclListAST*)$2, nullptr);
     } |
     K_LET declaration_list K_IN expr_seq K_END {
         debug_print("let declaration-list in expr-seq end");
+        $$ = new LetExprAST((DeclListAST*)$2, (ExprListAST*)$4);
     } ;
 
 expr_seq:
     expr {
         debug_print("expr");
+        $$ = new ExprListAST((ExprAST*)$1, nullptr);
     } |
-    expr_seq ';' expr {
-        debug_print("expr-seq ; expr");
+    expr ';' expr_seq {
+        debug_print("expr ; expr-seq");
+        $$ = new ExprListAST((ExprAST*)$1, (ExprListAST*)$3);
     } ;
 
 expr_list:
     expr {
         debug_print("expr");
+        $$ = new ExprListAST((ExprAST*)$1, nullptr);
     } |
-    expr_list ',' expr {
-        debug_print("expr-list , expr");
+    expr ',' expr_list {
+        debug_print("expr , expr-list");
+        $$ = new ExprListAST((ExprAST*)$1, (ExprListAST*)$3);
     } ;
 
 field_list:
     id '=' expr {
         debug_print("id = expr");
+        LexAST* token = (LexAST*)$1;
+        $$ = new FieldListAST(token->text, (ExprAST*)$3, nullptr);
+        delete $1;
     } |
-    field_list ',' id '=' expr {
-        debug_print("field-list , id = expr");
+    id '=' expr ',' field_list {
+        debug_print("id = expr , field-list");
+        LexAST* token = (LexAST*)$1;
+        $$ = new FieldListAST(token->text, (ExprAST*)$3, (FieldListAST*)$5);
+        delete $1;
     } ;
 
 lvalue:
     id {
         debug_print("id");
+        LexAST* token = (LexAST*)$1;
+        $$ = new SimpleVarAST(token->text);
+        delete $1;
     } |
     lvalue '.' id {
         debug_print("lvalue . id");
+        LexAST* token = (LexAST*)$3;
+        $$ = new FieldVarAST((VarAST*)$1, token->text);
+        delete $3;
     } |
     lvalue '[' expr ']' {
         debug_print("lvalue [ expr ]");
+        $$ = new IndexVarAST((VarAST*)$1, (ExprAST*)$3);
     } ;
 
 //===----------------------------------------------------------------------===//
@@ -192,89 +280,140 @@ lvalue:
 declaration_list:
     declaration {
         debug_print("declaration");
+        $$ = new DeclListAST((DeclAST*)$1, nullptr);
     } |
-    declaration_list declaration {
+    declaration declaration_list {
         debug_print("declaration-list declaration");
+        $$ = new DeclListAST((DeclAST*)$1, (DeclListAST*)$2);
     } ;
 declaration:
     type_declaration {
         debug_print("type-declaration");
+        $$ = $1;
     } |
     variable_declaration {
         debug_print("variable-declaration");
+        $$ = $1;
     } |
     function_declaration {
         debug_print("function-declaration");
+        $$ = $1;
     } ;
 
 type_declaration:
     K_TYPE id '=' type {
         debug_print("type type-id = type");
-        typeset.insert($2);
+        LexAST* token = (LexAST*)$2;
+        $$ = new TypeDeclAST(token->text, (TypeAST*)$4);
+        
+        TigerParser::insert(token->text);
+        delete $2;
     } ;
 
 type:
     typename {
         debug_print("type-id");
+        LexAST* token = (LexAST*)$1;
+        $$ = new SimpleTypeAST(token->text);
+        delete $1;
     } |
     '{' '}' {
         debug_print("{ }");
+        $$ = new RecordTypeAST(nullptr);
     } |
     '{' type_fields '}' {
         debug_print("{ type-fields }");
+        $$ = new RecordTypeAST((TypeFieldsAST*)$2);
     } |
     K_ARRAY K_OF typename {
         debug_print("array of type-id");
+        LexAST* token = (LexAST*)$3;
+        $$ = new ArrayTypeAST(token->text);
+        delete $3;
     } ;
 
 type_fields:
-    type_field {
-        debug_print("type-field");
-    } |
-    type_fields ',' type_field {
-        debug_print("type-fields , type-field");
-    } ;
-
-type_field:
     id ':' typename {
-        debug_print("id : type-id");
+        debug_print("id : typename");
+        LexAST* token1 = (LexAST*)$1;
+        LexAST* token3 = (LexAST*)$3;
+        $$ = new TypeFieldsAST(token1->text, token3->text, nullptr);
+        delete $1;
+        delete $3;
+    } |
+    id ':' typename ',' type_fields {
+        debug_print("id : typename , type-fields");
+        LexAST* token1 = (LexAST*)$1;
+        LexAST* token3 = (LexAST*)$3;
+        $$ = new TypeFieldsAST(token1->text, token3->text, (TypeFieldsAST*)$5);
+        delete $1;
+        delete $3;
     } ;
 
 variable_declaration:
     K_VAR id O_ASSIGN expr {
         debug_print("var id := expr");
+        LexAST* token = (LexAST*)$2;
+        $$ = new VarDeclAST(token->text, nullptr, (ExprAST*)$4);
+        delete $2;
     } |
     K_VAR id ':' typename O_ASSIGN expr {
         debug_print("var id : type-id := expr");
+        LexAST* token2 = (LexAST*)$2;
+        LexAST* token4 = (LexAST*)$4;
+        $$ = new VarDeclAST(token2->text, new SimpleTypeAST(token4->text), (ExprAST*)$6);
+        delete $2;
+        delete $4;
     } ;
 
 function_declaration:
     K_FUNC id '(' ')' '=' expr {
         debug_print("function id ( ) = expr");
+        LexAST* token = (LexAST*)$2;
+        $$ = new FuncDeclAST(token->text, nullptr, nullptr, (ExprAST*)$6);
+        delete $2;
     } |
     K_FUNC id '(' type_fields ')' '=' expr {
         debug_print("function id ( type-fields ) = expr");
+        LexAST* token = (LexAST*)$2;
+        $$ = new FuncDeclAST(token->text, (TypeFieldsAST*)$4, nullptr, (ExprAST*)$7);
+        delete $2;
     } |
     K_FUNC id '(' ')' ':' typename '=' expr {
         debug_print("function id ( ) : type-id = expr");
+        LexAST* token2 = (LexAST*)$2;
+        LexAST* token6 = (LexAST*)$6;
+        $$ = new FuncDeclAST(token2->text, nullptr, new SimpleTypeAST(token6->text), (ExprAST*)$8);
+        delete $2;
+        delete $6;
     } |
     K_FUNC id '(' type_fields ')' ':' typename '=' expr {
         debug_print("function id ( type-fields ) : type-id = expr");
+        LexAST* token2 = (LexAST*)$2;
+        LexAST* token7 = (LexAST*)$7;
+        $$ = new FuncDeclAST(token2->text, (TypeFieldsAST*)$4, new SimpleTypeAST(token7->text), (ExprAST*)$9);
+        delete $2;
+        delete $7;
     } ;
 %%
 
-int main()
+AST* TigerParser::parse(const char *filepath)
 {
-    if(!(yyin = fopen(TIGER_SOURCE, "r"))) {
-        std::cerr << "Cannot open tiger source file: \"" << TIGER_SOURCE << "\"" << std::endl;
-        return 1;
+    std::cout << "Begin Parsing \"" << filepath << "\"...\n";
+    if(!(yyin = fopen(filepath, "r"))) {
+        std::cerr << "Cannot open tiger source file: \"" << filepath << "\"" << std::endl;
+        exit(1);
+        return nullptr;
     }
-    typeset = TypeSet();
-    yyparse();
-    return 0;
+    TigerParser::reset();
+
+    AST *res;
+    yyparse(res);
+    std::cout << "End Parsing." << std::endl;
+    return res;
 }
 
-void yyerror(const char *msg)
+void yyerror(AST* ast, const char *msg)
 {
     std::cout << "Error encountered: " << msg << std::endl;
 }

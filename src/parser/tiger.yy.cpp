@@ -283,36 +283,39 @@ static void yy_fatal_error YY_PROTO(( yyconst char msg[] ));
 	*yy_cp = '\0'; \
 	yy_c_buf_p = yy_cp;
 
-#define YY_NUM_RULES 25
-#define YY_END_OF_BUFFER 26
-static yyconst short int yy_accept[78] =
+#define YY_NUM_RULES 38
+#define YY_END_OF_BUFFER 39
+static yyconst short int yy_accept[98] =
     {   0,
-        0,    0,   26,   25,   25,   22,   22,   20,   22,   22,
-       22,   21,   21,   21,   21,   21,   21,   21,   21,   21,
-       21,   21,   21,   21,    0,   19,    0,   23,   20,   17,
-       18,   21,   21,   21,    5,   21,   21,   21,   21,    2,
-        9,   21,   21,   11,    7,   21,   21,   21,    0,    0,
-       23,   21,   21,   21,   10,    6,   21,   16,    1,   21,
-       14,   21,   24,   21,   21,    3,   21,   12,   21,   13,
-        8,   21,    4,   21,   21,   15,    0
+        0,    0,   21,   21,   39,   38,   37,   20,   34,   33,
+       34,   31,   33,   34,   34,   32,   32,   32,   32,   32,
+       32,   32,   32,   32,   32,   32,   32,   32,   21,   30,
+       28,   26,   37,    0,   35,   31,   18,   19,   32,   32,
+       32,    5,   32,   32,   32,   32,    2,    9,   32,   32,
+       11,   32,    7,   32,   32,   32,   21,   29,   27,   26,
+       25,   22,   24,   23,    0,    0,    0,   35,   32,   32,
+       32,   10,    6,   32,   16,    1,   32,   32,   14,   32,
+       26,   36,   32,   32,    3,   32,   17,   12,   32,   13,
+        8,   32,    4,   32,   32,   15,    0
+
     } ;
 
 static yyconst int yy_ec[256] =
     {   0,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    2,
+        1,    1,    1,    1,    1,    1,    1,    1,    2,    3,
+        1,    1,    4,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    1,    3,    1,    1,    1,    4,    1,    4,
-        4,    5,    4,    4,    4,    4,    6,    7,    7,    7,
-        7,    7,    7,    7,    7,    7,    7,    8,    4,    9,
-       10,   11,    1,    1,   12,   12,   12,   12,   12,   12,
-       12,   12,   12,   12,   12,   12,   12,   12,   12,   12,
-       12,   12,   12,   12,   12,   12,   12,   12,   12,   12,
-        4,    1,    4,    1,   12,    1,   13,   14,   15,   16,
+        1,    5,    1,    6,    1,    1,    1,    7,    8,    9,
+        9,   10,    7,    9,    7,    9,   11,   12,   12,   12,
+       12,   12,   12,   12,   12,   13,   13,   14,    9,   15,
+       16,   17,    1,    1,   18,   18,   18,   18,   18,   18,
+       18,   18,   18,   18,   18,   18,   18,   18,   18,   18,
+       18,   18,   18,   18,   18,   18,   18,   18,   18,   18,
+        9,   19,    9,    1,   18,    1,   20,   21,   22,   23,
 
-       17,   18,   12,   19,   20,   12,   21,   22,   12,   23,
-       24,   25,   12,   26,   27,   28,   29,   30,   31,   12,
-       32,   12,    4,    4,    4,    1,    1,    1,    1,    1,
+       24,   25,   18,   26,   27,   18,   28,   29,   18,   30,
+       31,   32,   18,   33,   34,   35,   36,   37,   38,   18,
+       39,   18,    9,    7,    9,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
@@ -329,74 +332,92 @@ static yyconst int yy_ec[256] =
         1,    1,    1,    1,    1
     } ;
 
-static yyconst int yy_meta[33] =
+static yyconst int yy_meta[40] =
     {   0,
-        1,    2,    1,    1,    1,    1,    3,    1,    1,    1,
-        1,    3,    3,    3,    3,    3,    3,    3,    3,    3,
-        3,    3,    3,    3,    3,    3,    3,    3,    3,    3,
-        3,    3
+        1,    1,    2,    1,    1,    3,    1,    1,    1,    1,
+        1,    4,    4,    1,    1,    1,    1,    4,    3,    4,
+        4,    4,    4,    4,    4,    4,    4,    4,    4,    4,
+        4,    4,    4,    4,    4,    4,    4,    4,    4
     } ;
 
-static yyconst short int yy_base[82] =
+static yyconst short int yy_base[105] =
     {   0,
-        0,    0,   97,   98,   93,   98,   28,   88,   84,   25,
-       83,    0,   66,   65,   66,   15,   15,   22,   72,   68,
-       69,   17,   73,   66,   81,   80,   77,    0,   74,   98,
-       98,    0,   54,   62,    0,   51,   61,   50,   52,    0,
-        0,   46,   51,    0,    0,   47,   45,   50,   64,   37,
-        0,   55,   54,   49,    0,    0,   50,    0,    0,   47,
-        0,   41,   57,   29,   39,    0,   31,    0,   40,    0,
-        0,   31,    0,   24,   24,    0,   98,   49,   43,   52,
-       55
+        0,    0,   37,   38,  146,  147,   43,  147,  147,  147,
+       39,   39,  129,   37,  128,    0,  110,  109,  110,   29,
+       24,   36,  116,  112,  113,   36,  117,  110,    0,  147,
+      147,   70,   66,   53,    0,   60,  147,  147,    0,  102,
+      110,    0,   99,  109,   98,  100,    0,    0,   88,   86,
+        0,   88,    0,   79,   71,   75,    0,  147,  147,   89,
+      147,  147,  147,  147,   69,   73,   75,    0,   79,   78,
+       73,    0,    0,   74,    0,    0,   65,   70,    0,   64,
+       80,  147,   51,   60,    0,   52,    0,    0,   57,    0,
+        0,   50,    0,   43,   35,    0,  147,  105,   38,  109,
+
+      113,  117,  121,  125
     } ;
 
-static yyconst short int yy_def[82] =
+static yyconst short int yy_def[105] =
     {   0,
-       77,    1,   77,   77,   78,   77,   77,   77,   77,   77,
-       77,   79,   79,   79,   79,   79,   79,   79,   79,   79,
-       79,   79,   79,   79,   78,   78,   80,   81,   77,   77,
-       77,   79,   79,   79,   79,   79,   79,   79,   79,   79,
-       79,   79,   79,   79,   79,   79,   79,   79,   80,   80,
-       81,   79,   79,   79,   79,   79,   79,   79,   79,   79,
-       79,   79,   80,   79,   79,   79,   79,   79,   79,   79,
-       79,   79,   79,   79,   79,   79,    0,   77,   77,   77,
-       77
+       97,    1,   98,   98,   97,   97,   97,   97,   97,   97,
+       97,   97,   97,   97,   97,   99,   99,   99,   99,   99,
+       99,   99,   99,   99,   99,   99,   99,   99,  100,   97,
+       97,  101,   97,  102,  103,   97,   97,   97,   99,   99,
+       99,   99,   99,   99,   99,   99,   99,   99,   99,   99,
+       99,   99,   99,   99,   99,   99,  100,   97,   97,   97,
+       97,   97,   97,   97,  102,  104,  102,  103,   99,   99,
+       99,   99,   99,   99,   99,   99,   99,   99,   99,   99,
+       97,   97,   99,   99,   99,   99,   99,   99,   99,   99,
+       99,   99,   99,   99,   99,   99,    0,   97,   97,   97,
+
+       97,   97,   97,   97
     } ;
 
-static yyconst short int yy_nxt[131] =
+static yyconst short int yy_nxt[187] =
     {   0,
-        4,    4,    5,    6,    6,    7,    8,    9,   10,    6,
-       11,   12,   13,   14,   12,   15,   16,   17,   12,   18,
-       12,   19,   20,   21,   12,   12,   12,   22,   12,   23,
-       24,   12,   27,   28,   31,   31,   36,   37,   38,   40,
-       45,   50,   63,   39,   41,   32,   76,   75,   46,   25,
-       74,   25,   49,   49,   49,   51,   73,   51,   72,   71,
-       70,   50,   69,   68,   67,   66,   65,   64,   50,   62,
-       61,   60,   59,   58,   57,   56,   55,   54,   53,   52,
-       29,   50,   26,   26,   48,   47,   44,   43,   42,   35,
-       34,   33,   31,   30,   29,   26,   77,    3,   77,   77,
+        6,    7,    7,    7,    7,    8,    9,    6,   10,    9,
+       11,   12,   12,   13,   14,    9,   15,   16,    6,   17,
+       18,   16,   19,   20,   21,   16,   22,   16,   23,   24,
+       25,   16,   16,   16,   26,   16,   27,   28,   16,   30,
+       30,   39,   31,   31,   33,   33,   33,   33,   34,   35,
+       36,   36,   38,   38,   45,   32,   32,   43,   44,   46,
+       47,   52,   66,   67,   96,   48,   53,   33,   33,   33,
+       33,   36,   36,   95,   54,   59,   94,   59,   66,   67,
+       93,   60,   66,   82,   66,   67,   92,   91,   59,   90,
+       61,   81,   89,   88,   87,   86,   85,   84,   83,   62,
 
-       77,   77,   77,   77,   77,   77,   77,   77,   77,   77,
-       77,   77,   77,   77,   77,   77,   77,   77,   77,   77,
-       77,   77,   77,   77,   77,   77,   77,   77,   77,   77
+       81,   80,   63,   79,   64,   29,   29,   29,   29,   57,
+       78,   77,   57,   58,   76,   58,   58,   65,   65,   65,
+       65,   68,   75,   68,   68,   67,   67,   67,   67,   74,
+       73,   72,   71,   70,   69,   56,   55,   51,   50,   49,
+       42,   41,   40,   38,   37,   97,    5,   97,   97,   97,
+       97,   97,   97,   97,   97,   97,   97,   97,   97,   97,
+       97,   97,   97,   97,   97,   97,   97,   97,   97,   97,
+       97,   97,   97,   97,   97,   97,   97,   97,   97,   97,
+       97,   97,   97,   97,   97,   97
     } ;
 
-static yyconst short int yy_chk[131] =
+static yyconst short int yy_chk[187] =
     {   0,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
         1,    1,    1,    1,    1,    1,    1,    1,    1,    1,
-        1,    1,    7,    7,   10,   10,   16,   16,   17,   18,
-       22,   50,   50,   17,   18,   79,   75,   74,   22,   78,
-       72,   78,   80,   80,   80,   81,   69,   81,   67,   65,
-       64,   63,   62,   60,   57,   54,   53,   52,   49,   48,
-       47,   46,   43,   42,   39,   38,   37,   36,   34,   33,
-       29,   27,   26,   25,   24,   23,   21,   20,   19,   15,
-       14,   13,   11,    9,    8,    5,    3,   77,   77,   77,
+        1,    1,    1,    1,    1,    1,    1,    1,    1,    3,
+        4,   99,    3,    4,    7,    7,    7,    7,   11,   11,
+       12,   12,   14,   14,   21,    3,    4,   20,   20,   21,
+       22,   26,   34,   34,   95,   22,   26,   33,   33,   33,
+       33,   36,   36,   94,   26,   32,   92,   32,   65,   65,
+       89,   32,   66,   66,   67,   67,   86,   84,   32,   83,
+       32,   81,   80,   78,   77,   74,   71,   70,   69,   32,
 
-       77,   77,   77,   77,   77,   77,   77,   77,   77,   77,
-       77,   77,   77,   77,   77,   77,   77,   77,   77,   77,
-       77,   77,   77,   77,   77,   77,   77,   77,   77,   77
+       60,   56,   32,   55,   32,   98,   98,   98,   98,  100,
+       54,   52,  100,  101,   50,  101,  101,  102,  102,  102,
+      102,  103,   49,  103,  103,  104,  104,  104,  104,   46,
+       45,   44,   43,   41,   40,   28,   27,   25,   24,   23,
+       19,   18,   17,   15,   13,    5,   97,   97,   97,   97,
+       97,   97,   97,   97,   97,   97,   97,   97,   97,   97,
+       97,   97,   97,   97,   97,   97,   97,   97,   97,   97,
+       97,   97,   97,   97,   97,   97,   97,   97,   97,   97,
+       97,   97,   97,   97,   97,   97
     } ;
 
 static yy_state_type yy_last_accepting_state;
@@ -417,13 +438,18 @@ char *yytext;
 #include "tiger.tab.hpp"
  
 #include <iostream> 
+
+using namespace TigerParser;
+
+#define STRING 1
+
 /* Comments */
 /* Keywords */
 /* Operators */
 /* Punctuation */
 /* Constant */
 /* ID */
-#line 427 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.yy.cpp"
+#line 453 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.yy.cpp"
 
 /* Macros after this point can all be overridden by user definitions in
  * section 1.
@@ -574,9 +600,9 @@ YY_DECL
 	register char *yy_cp, *yy_bp;
 	register int yy_act;
 
-#line 43 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
+#line 52 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
 
-#line 580 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.yy.cpp"
+#line 606 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.yy.cpp"
 
 	if ( yy_init )
 		{
@@ -627,13 +653,13 @@ yy_match:
 			while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 				{
 				yy_current_state = (int) yy_def[yy_current_state];
-				if ( yy_current_state >= 78 )
+				if ( yy_current_state >= 98 )
 					yy_c = yy_meta[(unsigned int) yy_c];
 				}
 			yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
 			++yy_cp;
 			}
-		while ( yy_base[yy_current_state] != 98 );
+		while ( yy_base[yy_current_state] != 147 );
 
 yy_find_action:
 		yy_act = yy_accept[yy_current_state];
@@ -661,198 +687,296 @@ do_action:	/* This label is used only to access EOF actions. */
 
 case 1:
 YY_RULE_SETUP
-#line 44 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
+#line 53 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
 {
 	debug_print("NIL: " << yytext);
+	yylval = nullptr;
 	return K_NIL;
 }
 	YY_BREAK
 case 2:
 YY_RULE_SETUP
-#line 48 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
+#line 58 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
 {
 	debug_print("IF: " << yytext);
+	yylval = nullptr;
 	return K_IF;
 }
 	YY_BREAK
 case 3:
 YY_RULE_SETUP
-#line 52 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
+#line 63 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
 {
 	debug_print("ELSE: " << yytext);
+	yylval = nullptr;
 	return K_ELSE;
 }
 	YY_BREAK
 case 4:
 YY_RULE_SETUP
-#line 56 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
+#line 68 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
 {
 	debug_print("WHILE: " << yytext);
+	yylval = nullptr;
 	return K_WHILE;
 }
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 60 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
+#line 73 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
 {
 	debug_print("DO: " << yytext);
+	yylval = nullptr;
 	return K_DO;
 }
 	YY_BREAK
 case 6:
 YY_RULE_SETUP
-#line 64 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
+#line 78 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
 {
 	debug_print("FOR: " << yytext);
+	yylval = nullptr;
 	return K_FOR;
 }
 	YY_BREAK
 case 7:
 YY_RULE_SETUP
-#line 68 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
+#line 83 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
 {
 	debug_print("TO: " << yytext);
+	yylval = nullptr;
 	return K_TO;
 }
 	YY_BREAK
 case 8:
 YY_RULE_SETUP
-#line 72 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
+#line 88 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
 {
 	debug_print("BREAK: " << yytext);
+	yylval = nullptr;
 	return K_BREAK;
 }
 	YY_BREAK
 case 9:
 YY_RULE_SETUP
-#line 76 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
+#line 93 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
 {
 	debug_print("IN: " << yytext);
+	yylval = nullptr;
 	return K_IN;
 }
 	YY_BREAK
 case 10:
 YY_RULE_SETUP
-#line 80 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
+#line 98 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
 {
 	debug_print("END: " << yytext);
+	yylval = nullptr;
 	return K_END;
 }
 	YY_BREAK
 case 11:
 YY_RULE_SETUP
-#line 84 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
+#line 103 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
 {
 	debug_print("OF: " << yytext);
+	yylval = nullptr;
 	return K_OF;
 }
 	YY_BREAK
 case 12:
 YY_RULE_SETUP
-#line 88 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
+#line 108 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
 {
 	debug_print("TYPE: " << yytext);
+	yylval = nullptr;
 	return K_TYPE;
 }
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
-#line 92 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
+#line 113 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
 {
 	debug_print("ARRAY: " << yytext);
+	yylval = nullptr;
 	return K_ARRAY;
 }
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
-#line 96 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
+#line 118 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
 {
 	debug_print("VAR: " << yytext);
+	yylval = nullptr;
 	return K_VAR;
 }
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
-#line 100 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
+#line 123 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
 {
 	debug_print("FUNC: " << yytext);
+	yylval = nullptr;
 	return K_FUNC;
 }
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
-#line 104 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
+#line 128 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
 {
 	debug_print("LET: " << yytext);
+	yylval = nullptr;
 	return K_LET;
 }
 	YY_BREAK
 case 17:
 YY_RULE_SETUP
-#line 109 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
+#line 133 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
 {
-	debug_print("ASSIGN: " << yytext);
-	return O_ASSIGN;
+	debug_print("THEN: " << yytext);
+	yylval = nullptr;
+	return K_THEN;
 }
 	YY_BREAK
 case 18:
 YY_RULE_SETUP
-#line 113 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
+#line 139 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
 {
-	debug_print("COMPARE: " << yytext);
-	return O_COMPARE;
+	debug_print("ASSIGN: " << yytext);
+	yylval = nullptr;
+	return O_ASSIGN;
 }
 	YY_BREAK
 case 19:
 YY_RULE_SETUP
-#line 118 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
+#line 144 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
 {
-	debug_print("STRING: " << yytext);
-	return C_STRING;
+	debug_print("COMPARE: " << yytext);
+	yylval = new LexAST(yytext);
+	return O_COMPARE;
 }
 	YY_BREAK
 case 20:
 YY_RULE_SETUP
-#line 122 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
-{
-	debug_print("INTEGER: " << yytext);
-	return C_INTEGER;
-}
+#line 150 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
+{ BEGIN STRING; resetStrBuffer(); appendLabel("\\\""); }
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
-#line 127 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
-{
-	debug_print("ID: " << yytext);
-	yylval = yytext;
-	return typeset.contains(yytext)? T_TYPE: T_ID;
-}
+#line 151 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
+{ appendReal(yytext); appendLabel(yytext); }
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
-#line 133 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
-{
-	debug_print("PUNCTUATION: " << yytext);
-	return yytext[0];
-}
+#line 152 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
+{ appendReal('\n'); appendLabel("\\\\n"); }
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
-#line 138 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
-{ }
+#line 153 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
+{ appendReal('\t'); appendLabel("\\\\t"); }
 	YY_BREAK
 case 24:
 YY_RULE_SETUP
-#line 139 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
-{ }
+#line 154 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
+{ appendReal('\r'); appendLabel("\\\\r"); }
 	YY_BREAK
 case 25:
 YY_RULE_SETUP
-#line 140 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
+#line 155 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
+{ appendReal('\b'); appendLabel("\\\\b"); }
+	YY_BREAK
+case 26:
+YY_RULE_SETUP
+#line 156 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
+{ char c = (char)strtol(yytext + 1, 0, 8); 
+					  appendReal(c); appendLabel(std::string("\\\\") + (yytext + 1)); }
+	YY_BREAK
+case 27:
+YY_RULE_SETUP
+#line 158 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
+{ appendReal(yytext[1]); appendLabel(std::string("\\\\\\") + yytext[1]); }
+	YY_BREAK
+case 28:
+YY_RULE_SETUP
+#line 159 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
+{ 
+	appendLabel("\\\"");
+	debug_print("Real string:  " << realstr() << "   Label string:  " << labelstr());
+	yylval = new StrConstExprAST(realstr(), labelstr());
+	BEGIN 0; 
+	return C_STRING; 
+}
+	YY_BREAK
+case 29:
+YY_RULE_SETUP
+#line 166 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
+{ std::cerr << "bogus escape \"" << yytext << "\" in string" << std::endl; }
+	YY_BREAK
+case 30:
+YY_RULE_SETUP
+#line 167 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
+{ std::cerr << "newline in string" << std::endl; }
+	YY_BREAK
+case 31:
+YY_RULE_SETUP
+#line 169 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
+{
+	debug_print("INTEGER: " << yytext);
+	yylval = new IntConstExprAST(yytext);
+	return C_INTEGER;
+}
+	YY_BREAK
+case 32:
+YY_RULE_SETUP
+#line 175 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
+{
+	debug_print("ID: " << yytext);
+	yylval = new LexAST(yytext);
+	return hasType(yytext)? T_TYPE: T_ID;
+}
+	YY_BREAK
+case 33:
+YY_RULE_SETUP
+#line 181 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
+{
+	debug_print("PUNCTUATION: " << yytext);
+	yylval = nullptr;
+	return yytext[0];
+}
+	YY_BREAK
+case 34:
+YY_RULE_SETUP
+#line 187 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
+{
+	debug_print("OPERATOR: " << yytext);
+	yylval = new LexAST(yytext);
+	return yytext[0];
+}
+	YY_BREAK
+case 35:
+YY_RULE_SETUP
+#line 193 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
+{ }
+	YY_BREAK
+case 36:
+YY_RULE_SETUP
+#line 194 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
+{ }
+	YY_BREAK
+case 37:
+YY_RULE_SETUP
+#line 195 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
+{ debug_print(""); }
+	YY_BREAK
+case 38:
+YY_RULE_SETUP
+#line 196 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
 ECHO;
 	YY_BREAK
-#line 855 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.yy.cpp"
+#line 978 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.yy.cpp"
 case YY_STATE_EOF(INITIAL):
+case YY_STATE_EOF(STRING):
 	yyterminate();
 
 	case YY_END_OF_BUFFER:
@@ -1143,7 +1267,7 @@ static yy_state_type yy_get_previous_state()
 		while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 			{
 			yy_current_state = (int) yy_def[yy_current_state];
-			if ( yy_current_state >= 78 )
+			if ( yy_current_state >= 98 )
 				yy_c = yy_meta[(unsigned int) yy_c];
 			}
 		yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
@@ -1178,11 +1302,11 @@ yy_state_type yy_current_state;
 	while ( yy_chk[yy_base[yy_current_state] + yy_c] != yy_current_state )
 		{
 		yy_current_state = (int) yy_def[yy_current_state];
-		if ( yy_current_state >= 78 )
+		if ( yy_current_state >= 98 )
 			yy_c = yy_meta[(unsigned int) yy_c];
 		}
 	yy_current_state = yy_nxt[yy_base[yy_current_state] + (unsigned int) yy_c];
-	yy_is_jam = (yy_current_state == 77);
+	yy_is_jam = (yy_current_state == 97);
 
 	return yy_is_jam ? 0 : yy_current_state;
 	}
@@ -1737,7 +1861,7 @@ int main()
 	return 0;
 	}
 #endif
-#line 140 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
+#line 196 "D:\\111\\Courses\\CP\\tiger_compiler\\src\\parser\\tiger.l"
 
 
 int yywrap()

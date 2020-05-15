@@ -1,34 +1,45 @@
 #pragma once
 
-#define SHUZIXI_DEBUG
-#ifdef SHUZIXI_DEBUG
-#define debug_print(x) \
-    std::cout << "function " << __FUNCTION__ << " --- " << x << std::endl
-#else
-#define debug_print(x)
-#endif // SHUZIXI_DEBUG
+#include <AST/AST.h>
 
-#define TIGER_SOURCE    "examples/test.tiger"
+// Redefine yylval type
+typedef AST* ptrAST;
+#ifndef YYSTYPE
+#define YYSTYPE ptrAST
+#endif
 
 #include <set>
-// Set for available typename
-class TypeSet {
-private:
-    std::set<std::string> _typeset;
-public:
-    TypeSet() {
-        _typeset.insert({ "int", "string" });
-    }
-    bool contains(std::string s) {
-        return _typeset.find(s) != _typeset.end();
-    }
-    void insert(std::string s) {
-        _typeset.insert(s);
-    }
+
+// Namespace to access yacc
+namespace TigerParser {
+
+// Set for typename
+extern std::set<std::string> _typeset;
+// Utils for type-id
+inline bool hasType(std::string s) { return _typeset.find(s) != _typeset.end(); }
+inline void insert(std::string s) { _typeset.insert(s); }
+
+// string constant parser
+// catched: "a \' b"
+// actual string: a ' b
+// visualize string: \"a \\\' b\"
+extern std::ostringstream _str_real;
+extern std::ostringstream _str_label;
+// Utils for string constant
+inline void resetStrBuffer() { _str_real.str(""); _str_label.str(""); }
+inline std::string realstr() { return _str_real.str(); }
+inline std::string labelstr() { return _str_label.str(); }
+template<class T> inline void appendReal (T val) { _str_real  << val; }
+template<class T> inline void appendLabel(T val) { _str_label << val; }
+
+// Public interfaces
+inline void reset() {
+    _typeset = std::set<std::string>({ "int", "string" });
+    resetStrBuffer();
+}
+AST* parse(const char *filepath);     // return error code, implement in tiger.ypp
+inline AST* parse(std::string s) {
+    return parse(s.c_str()); 
+}
+
 };
-
-extern TypeSet typeset;
-
-#ifndef YYSTYPE
-#define YYSTYPE std::string
-#endif

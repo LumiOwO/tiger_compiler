@@ -15,27 +15,27 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\KaleidoscopeJIT.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="src\parser\AST.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="src\parser\parser.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="src\parser\tiger.tab.hpp">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="src\AST\AST.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\parser\AST.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="src\parser\tiger.tab.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\parser\tiger.yy.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AST\AST.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
