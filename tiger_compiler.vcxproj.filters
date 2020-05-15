@@ -15,12 +15,27 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\KaleidoscopeJIT.h">
+    <ClInclude Include="src\parser\parser.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\parser\tiger.tab.hpp">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="src\AST\AST.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\toy.cpp">
+    <ClCompile Include="src\parser\tiger.tab.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\parser\tiger.yy.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\AST\AST.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
@@ -195,5 +210,7 @@
     <None Include="llvm\compiled\lib\Release\LLVM-C.exp" />
     <None Include="llvm\compiled\lib\Release\LTO.exp" />
     <None Include="llvm\compiled\lib\Release\Remarks.exp" />
+    <None Include="src\parser\tiger.l" />
+    <None Include="src\parser\tiger.ypp" />
   </ItemGroup>
 </Project>

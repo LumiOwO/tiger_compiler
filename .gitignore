@@ -263,3 +263,5 @@ __pycache__/
 # temp
 !llvm/lib/Release/
 !llvm/compiled/lib/Release/
+!GnuWin32/*
+GnuWin32/uninstall
