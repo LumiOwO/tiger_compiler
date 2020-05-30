@@ -2,7 +2,7 @@
 
 llvm::Type *MainAST::traverse(std::vector<VarDeclAST *> &varTable, CodeGen &context) {
 	context.typeDecls.resetTable();
-	return _mainExpr->traverse(varTable, context);
+	return _mainExpr->traverse(mainVarTable, context);
 }
 
 //===----------------------------------------------------------------------===//
@@ -21,7 +21,7 @@ llvm::Type *FieldVarAST::traverse(std::vector<VarDeclAST *> &varTable, CodeGen &
 	llvm::Type *var = _var->traverse(varTable, context);
 	if (!var)
 		return nullptr;
-	if (!(var->isPointerTy() && context.getType(var)->isStructTy()))
+	if (!context.isRecord(var))
 		return context.errorTypeMsg("Field var can only be used by record type.");
 	llvm::StructType *varType = llvm::cast<llvm::StructType>(context.getType(var));
 	RecordTypeAST *typeDecl = dynamic_cast<RecordTypeAST *>(context.typeDecls[varType->getStructName().data()]);
@@ -53,7 +53,7 @@ llvm::Type *IndexVarAST::traverse(std::vector<VarDeclAST *> &varTable, CodeGen &
 		return nullptr;
 	if (!exp->isIntegerTy())
 		return context.errorTypeMsg("Index must be an integer!");
-	
+
 	return type_;
 }
 
@@ -65,7 +65,7 @@ llvm::Type *SimpleTypeAST::traverse(std::set<std::string> &parentName, CodeGen &
 	llvm::Type *type = context.types[_name];
 	if (type)
 		return type;
-	llvm::Type *type = context.types[_type_id];
+	type = context.types[_type_id];
 	if (type) {
 		context.types.push(_name, type);
 		return type;
@@ -74,7 +74,7 @@ llvm::Type *SimpleTypeAST::traverse(std::set<std::string> &parentName, CodeGen &
 		return context.errorTypeMsg("An endless loop in type definition is detected.");
 	}
 	parentName.insert(_name);
-	llvm::Type *type = context.typeOf(_type_id, parentName);
+	type = context.typeOf(_type_id, parentName);
 	parentName.erase(_name);
 	return type;
 }
@@ -100,19 +100,19 @@ llvm::Type *RecordTypeAST::traverse(std::set<std::string> &parentName, CodeGen &
 		typeFields = typeFields->getNext();
 	}
 	parentName.erase(_name);
-	llvm::Type *type = context.types[_name];
+	type = context.types[_name];
 	if (type) {
-		if (!type->isPointerTy()) 
+		if (!type->isPointerTy())
 			return nullptr;
 		auto elementType = context.getType(type);
-		if (!elementType->isStructTy()) 
+		if (!elementType->isStructTy())
 			return nullptr;
 		llvm::cast<llvm::StructType>(elementType)->setBody(typeArr);
 		return type;
 	}
 	else {
 		type = llvm::PointerType::getUnqual(llvm::StructType::create(context.context, typeArr, _name));
-		if (!type) 
+		if (!type)
 			return nullptr;
 		context.types.push(_name, type);
 		return type;
@@ -127,9 +127,9 @@ llvm::Type *ArrayTypeAST::traverse(std::set<std::string> &parentName, CodeGen &c
 		return context.errorTypeMsg("An endless loop in type definition is detected.");
 	}
 	parentName.insert(_name);
-	llvm::Type *type = context.typeOf(_type_id, parentName);
+	type = context.typeOf(_type_id, parentName);
 	parentName.erase(_name);
-	if (!type) 
+	if (!type)
 		return nullptr;
 	type = llvm::PointerType::getUnqual(type);
 	context.types.push(_name, type);
@@ -148,13 +148,13 @@ llvm::Type *VarDeclAST::traverse(std::vector<VarDeclAST *> &varTable, CodeGen &c
 	level_ = context.currentLevel;
 	varTable.push_back(this);
 	llvm::Type *exprType = _expr->traverse(varTable, context);
-	if (_type = nullptr) {
+	if (_type == nullptr) {
 		type_ = exprType;
 	}
 	else {
 		type_ = context.typeOf(_type->getTypeId());
 		if (!context.typeMatch(type_, exprType)) {
-			return context.errorTypeMsg( "The type on the two sides is not match!");
+			return context.errorTypeMsg("The type on the two sides is not match!");
 		}
 	}
 	if (!type_)
@@ -216,10 +216,10 @@ llvm::Type *FuncDeclAST::traverse(std::vector<VarDeclAST *> &varTable, CodeGen &
 
 	context.currentLevel -= 1;
 	llvm::Type *returnType = _funcTy->getResultType();
-	if (!returnType->isVoidTy() && returnType != expr) {
+	if (!returnType->isVoidTy() && returnType != expr)
 		return context.errorTypeMsg("Result type doesn't match the defined return type!");
-	}
-	return context.voidType;
+	else
+		return context.voidType;
 }
 
 //===----------------------------------------------------------------------===//
@@ -298,17 +298,15 @@ llvm::Type *BinaryExprAST::traverse(std::vector<VarDeclAST *> &varTable, CodeGen
 	llvm::Type *rightType = _expr_right->traverse(varTable, context);
 	if (!leftType || !rightType)
 		return nullptr;
-	std::set<std::string> numOp = {"+", "-", "*", "/", ">=", "<=", ">", "<", "&", "|"};
-	std::set<std::string> eqOp = { "=", "<>" };
 	if (numOp.find(_op) != numOp.end()) {
 		if (leftType->isIntegerTy() && rightType->isIntegerTy())
 			return context.intType;
 		else
 			return context.errorTypeMsg("The two expr in binary operation should be integer type!");
 	}
-	else if (eqOp.find(_op) != eqOp.end()){
+	else if (cmpOp.find(_op) != cmpOp.end()) {
 		if (context.typeMatch(leftType, rightType)) {
-			if(leftType == context.nilType && rightType == context.nilType)
+			if (leftType == context.nilType && rightType == context.nilType)
 				return context.errorTypeMsg("Nil cannot compare with nil!");
 			else
 				return context.intType;
@@ -338,7 +336,7 @@ llvm::Type *AssignExprAST::traverse(std::vector<VarDeclAST *> &varTable, CodeGen
 llvm::Type *FuncExprAST::traverse(std::vector<VarDeclAST *> &varTable, CodeGen &context) {
 	llvm::Function *function = context.functions[_func_name];
 	if (!function)
-		return context.errorTypeMsg("Function" + _func_name + "isn't declared!");
+		return context.errorTypeMsg("Function " + _func_name + " isn't declared!");
 	size_t paramNum = 0u;
 	size_t index = 0u;
 	ExprListAST *exprList = _expr_list;
@@ -409,7 +407,7 @@ llvm::Type *RecordDefineExprAST::traverse(std::vector<VarDeclAST *> &varTable, C
 	fieldExp = _field_list;
 	while (typeField && fieldExp) {
 		if (typeField->getId() != fieldExp->getId()) {
-			return context.errorTypeMsg(fieldExp->getId() + "isn't a field id or isn't at right position!");
+			return context.errorTypeMsg(fieldExp->getId() + " isn't a field id or isn't at right position!");
 		}
 		llvm::Type *type = fieldExp->traverse(varTable, context);
 		if (!context.typeMatch(type, typeField->getType())) {
@@ -425,17 +423,17 @@ llvm::Type *ArrayDefineExprAST::traverse(std::vector<VarDeclAST *> &varTable, Co
 	type_ = context.typeOf(_type_id);
 	if (!type_)
 		return nullptr;
-	if(!type_->isPointerTy())
+	if (!type_->isPointerTy())
 		return context.errorTypeMsg("It should be array type!");
 	llvm::Type *elementType = context.getType(type_);
-	llvm::Type *sizeType = _size->traverse(varTable, context);
-	if (sizeType)
-		return nullptr;
-	if(!sizeType->isIntegerTy())
-		return context.errorTypeMsg("The size of array should be an integer!");
 	llvm::Type *valueType = _value->traverse(varTable, context);
 	if (!valueType)
 		return nullptr;
+	llvm::Type *sizeType = _size->traverse(varTable, context);
+	if (!sizeType)
+		return nullptr;
+	if (!sizeType->isIntegerTy())
+		return context.errorTypeMsg("The size of array should be an integer!");
 	if (elementType != valueType)
 		return context.errorTypeMsg("The value type of array is wrong!");
 	return type_;
@@ -445,7 +443,7 @@ llvm::Type *IfExprAST::traverse(std::vector<VarDeclAST *> &varTable, CodeGen &co
 	llvm::Type *ifType = _if_expr->traverse(varTable, context);
 	if (!ifType)
 		return nullptr;
-	if(!ifType->isIntegerTy())
+	if (!ifType->isIntegerTy())
 		return context.errorTypeMsg("The condition of if expr should be integer!");
 	llvm::Type *thenType = _then_expr->traverse(varTable, context);
 	if (!thenType)
@@ -454,7 +452,7 @@ llvm::Type *IfExprAST::traverse(std::vector<VarDeclAST *> &varTable, CodeGen &co
 		llvm::Type *elseType = _else_expr->traverse(varTable, context);
 		if (!elseType)
 			return nullptr;
-		if(!context.typeMatch(thenType, elseType))
+		if (!context.typeMatch(thenType, elseType))
 			return context.errorTypeMsg("The types of then expr and else expr should match!");
 		return thenType;
 	}

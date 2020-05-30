@@ -49,6 +49,7 @@
       <AdditionalLibraryDirectories>$(ProjectDir)\llvm\compiled\lib\Release;$(ProjectDir)\llvm\lib\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <SubSystem>Console</SubSystem>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
     <PreBuildEvent>
       <Command>@set GNUWIN32_DIR=$(ProjectDir)GnuWin32\bin
@@ -60,14 +61,12 @@ cd %PARSER_DIR%
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\AST\AST.h" />
-    <ClInclude Include="src\CodeGen\CodeGen.h" />
     <ClInclude Include="src\CodeGen\SymbolTable.h" />
     <ClInclude Include="src\parser\parser.h" />
     <ClInclude Include="src\parser\tiger.tab.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\CodeGen\AST_Traversal.cpp" />
-    <ClCompile Include="src\CodeGen\BuiltIn.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\AST\AST.cpp" />
     <ClCompile Include="src\parser\tiger.tab.cpp" />

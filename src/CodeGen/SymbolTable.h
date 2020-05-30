@@ -7,7 +7,7 @@
 
 template <typename T>
 class SymbolTable {
-//deque, for different scope
+	//deque, for different scope
 	std::deque<std::unordered_map<std::string, T *>> SymbolStack;
 public:
 	SymbolTable();
@@ -62,15 +62,13 @@ T *&SymbolTable<T>::operator[](std::string const &name) {
 		if (stack[name])
 			return stack[name];
 	}
-	return nullptr;
+	return SymbolStack.front()[name];
 }
 
 //find name in current scope
 template <typename T>
 T *&SymbolTable<T>::find(std::string const &name) {
-	if (SymbolStack.front()[name]) 
-		return SymbolStack.front()[name];
-	return nullptr;
+	return SymbolStack.front()[name];
 }
 
 template <typename T>

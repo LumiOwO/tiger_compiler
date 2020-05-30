@@ -1,6 +1,7 @@
-#pragma once
+#ifndef PARSER_H
+#define PARSER_H
 
-#include <AST/AST.h>
+#include "AST/AST.h"
 
 // Redefine yylval type
 typedef AST* ptrAST;
@@ -43,3 +44,5 @@ namespace TigerParser {
 	}
 
 };
+
+#endif

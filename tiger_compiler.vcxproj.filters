@@ -27,9 +27,6 @@
     <ClInclude Include="src\CodeGen\SymbolTable.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="src\CodeGen\CodeGen.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\parser\tiger.tab.cpp">
@@ -42,9 +39,6 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\AST\AST.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CodeGen\BuiltIn.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\CodeGen\AST_Traversal.cpp">
