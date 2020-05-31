@@ -12,10 +12,12 @@ int main() {
 	ast->saveDot(dir + name + ".dot");
 
 	if (ast) {
+		//the root must be an expression
 		ExprAST *exprAST = dynamic_cast<ExprAST *>(ast);
-		//package the whole expression in a main function, return type "int"
+		//package the whole expression into a main function, return type "int"
 		MainAST *mainAST = new MainAST(exprAST);
 		CodeGen context;
+		//code generation
 		mainAST->codegen(context);
 		std::cout << "success" << std::endl;
 	}

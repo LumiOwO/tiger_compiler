@@ -43,13 +43,13 @@ void SymbolTable<T>::exit() {
 	SymbolStack.pop_front();
 }
 
-//in current scope
+//in current scope, push the name and value
 template <typename T>
 void SymbolTable<T>::push(std::string const &name, T *const val) {
 	SymbolStack.front()[name] = val;
 }
 
-//in current scope
+//in current scope, delete the name and value
 template <typename T>
 void SymbolTable<T>::pop(std::string const &name) {
 	SymbolStack.front().erase(name);
@@ -71,6 +71,7 @@ T *&SymbolTable<T>::find(std::string const &name) {
 	return SymbolStack.front()[name];
 }
 
+//clear the symbol table, init a new one
 template <typename T>
 void SymbolTable<T>::resetTable() {
 	SymbolStack.clear();

@@ -128,6 +128,7 @@ public:
 
 class TypeAST : public AST {
 protected:
+	//can see as the alias, for exxample: a = int, _name is "a"
 	std::string _name;
 public:
 	const std::string &getName() const { return _name; }
@@ -147,7 +148,9 @@ public:
 // Entry for codegen
 //===----------------------------------------------------------------------===//
 
+//package the whole expression into a main function, return type "int"
 class MainAST {
+	//the real expression
 	ExprAST* _mainExpr;
 	//AST* _mainExpr;
 	std::vector<VarDeclAST *> mainVarTable;
@@ -533,15 +536,20 @@ public:
 	}
 };
 
+// name (type-fields)
+// name (type-fields) : type-id
+// Example: f(a: int, b:int) = printi(a + b)
+// _name = "f", _params = (a: int, b:int), _returnType = void
 class FuncTy {
 	std::string _name;
 	TypeFieldsAST*  _params;
 	SimpleTypeAST* _returnType;
+
 	llvm::Type *resultType_{ nullptr };
 	llvm::Function *function_{ nullptr };
 	llvm::StructType *frame{ nullptr };
+	//use for child function to access variables in parent function
 	VarDeclAST *staticLink_{ nullptr };
-
 public:
 	FuncTy(std::string name, TypeFieldsAST *params, SimpleTypeAST *returnType)
 		: _name(name), _params(params), _returnType(returnType) { }
@@ -812,7 +820,7 @@ public:
 // Example: (a := 1 ; b := 2)  ()
 class SequenceExprAST : public ExprAST {
 private:
-	ExprListAST*    _expr_list;    // can be null
+	ExprListAST*  _expr_list;    // can be null
 public:
 	SequenceExprAST(ExprListAST* expr_list) :
 		_expr_list(expr_list) {}
@@ -1069,6 +1077,7 @@ public:
 	llvm::IRBuilder<> builder{ context };
 	std::unique_ptr<llvm::Module> module{ std::make_unique<llvm::Module>("main", context) };
 
+	//create built in types and values for convience
 	llvm::Type *voidType{ llvm::Type::getVoidTy(context) };
 	llvm::Type *intType{ llvm::Type::getInt64Ty(context) };
 	llvm::PointerType *stringType{ llvm::PointerType::getUnqual(llvm::Type::getInt8Ty(context)) };
@@ -1089,28 +1098,40 @@ public:
 	//staticLink used for child function to access vars in parent function
 	std::deque<llvm::StructType *> staticLink;
 	llvm::AllocaInst *currentFrame;
+	//the function level
 	size_t currentLevel = 0u;
 	bool errorOccurs = false;
-
+	//loop stack, use for the implement of break exp
 	std::stack<std::tuple<llvm::BasicBlock *, llvm::BasicBlock *>> loopStack;
-
+	//create some built in function, for convience
 	llvm::Function *strcmpFunction = createBuiltinFunction("Strcmp", intType, { stringType, stringType });
 	llvm::Function *allocateArrayFunction = createBuiltinFunction("AllocateArray", llvm::Type::getInt8PtrTy(context), { llvm::Type::getInt64Ty(context), llvm::Type::getInt64Ty(context) });
 	llvm::Function *allocateRecordFunction = createBuiltinFunction("AllocateRecord", llvm::Type::getInt8PtrTy(context), { llvm::Type::getInt64Ty(context) });
 
 	CodeGen();
+	//get the element of exp(exp is pointer type)
 	llvm::Type *getType(llvm::Type *exp);
+	//check if type a and type b match
 	bool typeMatch(llvm::Type *a, llvm::Type *b);
+	//check if exp corresponds to a record type
 	bool isRecord(llvm::Type *exp);
+	//get the llvm::Type of name using previous declaraions
 	llvm::Type *typeOf(std::string const &name);
 	llvm::Type *typeOf(std::string const &name, std::set<std::string> &parentName);
 	llvm::AllocaInst *getEntryBlockAllocate(llvm::Function *function, llvm::Type *type, std::string const &name, llvm::Value *size = nullptr);
+	//before we get val store in ptr, there is something to do with the nil type
 	llvm::Value *handleNil(llvm::Value *val, llvm::Value *ptr);
+	//store val in where ptr points to
 	llvm::Value *getStore(llvm::Value *val, llvm::Value *ptr);
+	//used in codegen, when error occurs
 	llvm::Type *errorTypeMsg(std::string const &msg);
+	//used in type check and generation, when error occurs
 	llvm::Value *errorValueMsg(std::string const &msg);
+	//create built in functions
 	llvm::Function *createBuiltinFunction(std::string const &name, llvm::Type *returnType, std::vector<llvm::Type *> const &args);
+	//standard library
 	void builtin();
+	//do the strcmp of two llvm::Value
 	llvm::Value *strcmp(llvm::Value *a, llvm::Value *b);
 };
 
